@@ -6,7 +6,8 @@ Claude Design's canvas editor as a starting point for the real
 implementation — not production code.
 
 - **Live preview**: https://claude.ai/code/artifact/81cc66b2-1268-4630-a5e8-1d5b78da7ec1
-- `Main.dc.html` — the mockup source (Design Component format)
+- `Main.dc.html` — full landing page mockup (later, once the tool is ready)
+- `ComingSoon.dc.html` — announcement/teaser page (the tool isn't ready yet, this ships first)
 - `canvas.json` — canvas layout manifest
 - `banner-hero.jpg` — downsampled/re-encoded copy of `banner.png` (repo root) used as the hero background
 

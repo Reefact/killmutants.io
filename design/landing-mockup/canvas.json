@@ -1,6 +1,7 @@
 {
   "artboards": [
-    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1440, "h": 3010, "expand": "fit" }
+    { "file": "ComingSoon.dc.html", "x": 0, "y": 0, "w": 1280, "h": 780, "expand": "fit", "title": "Coming Soon (announcement page)" },
+    { "file": "Main.dc.html", "x": 1400, "y": 0, "w": 1440, "h": 3010, "expand": "fit", "title": "Full landing (later, for reference)" }
   ],
-  "launch": { "view": "focused", "file": "Main.dc.html" }
+  "launch": { "view": "focused", "file": "ComingSoon.dc.html" }
 }
