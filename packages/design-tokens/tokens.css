@@ -1,0 +1,40 @@
+/*
+ * Design tokens for killmutants.io.
+ *
+ * Direction: horror-punk cyberpunk, grounded with a dirty/gritty city texture
+ * rather than an all-neon look — near-black backgrounds, an off-white
+ * "paint on a wall" title treatment, and neon accents used sparingly for
+ * CTAs, status badges, and code/terminal elements. See
+ * design/landing-mockup/README.md for the source exploration.
+ */
+
+:root {
+  /* Backgrounds */
+  --km-bg: #0d0c0a;
+  --km-bg-panel: #141210;
+  --km-bg-code: #110f0c;
+
+  /* Text */
+  --km-text: #e4ddc9;
+  --km-text-muted: #b8b2a2;
+  --km-text-dim: #a89f88;
+  --km-text-faint: #847c68;
+
+  /* Title */
+  --km-title: #f2f1ec;
+
+  /* Accents */
+  --km-mutant-violet: #b026ff;
+  --km-terminal-green: #39ff8f;
+  --km-static-blue: #4fd1e0;
+  --km-corrupted-red: #d81e3a;
+  --km-spark-orange: #ff8a3d;
+
+  /* Borders */
+  --km-border: rgba(255, 255, 255, 0.08);
+
+  /* Fonts */
+  --km-font-display: "Rubik Wet Paint", cursive;
+  --km-font-body: "Space Grotesk", system-ui, sans-serif;
+  --km-font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
