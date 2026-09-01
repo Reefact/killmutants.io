@@ -11,6 +11,14 @@ implementation — not production code.
 - `canvas.json` — canvas layout manifest
 - `banner-hero.jpg` — downsampled/re-encoded copy of `assets/brand/banner.png` used as the hero background
 
+These `.dc.html` files are **not standalone HTML** — they reference a
+`support.js` runtime that Claude Design's canvas editor injects at publish
+time, and depend on that editor to resolve template placeholders (like
+`{{accentViolet}}`). Opening them directly in a browser will not render
+correctly. Use the live preview link above to view or edit them; the
+"coming soon" page has since been implemented as real, standalone code in
+`apps/web/src/pages/index.astro`, which is the one to run/build normally.
+
 ## Direction
 
 Horror-punk cyberpunk key art vibe, but grounded with a dirty/gritty city
