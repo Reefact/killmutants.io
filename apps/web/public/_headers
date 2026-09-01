@@ -1,0 +1,7 @@
+# HTML is always revalidated, so a redeploy is visible immediately instead of
+# being served from a stale cached copy (same approach as justdummies.io).
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/
+  Cache-Control: public, max-age=0, must-revalidate
