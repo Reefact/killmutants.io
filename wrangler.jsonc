@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+
+  "name": "killmutants-site",
+  "compatibility_date": "2026-09-01",
+
+  // No custom domain attached yet — leave the default workers.dev subdomain on
+  // so the first deployment has a reachable address to test against. Turn
+  // this off once killmutants.io is attached as the site's real address
+  // (see justdummies.io's wrangler.jsonc for why: workers_dev left on serves
+  // the same site under a second, unintended hostname).
+  "workers_dev": true,
+
+  // Pure static assets — no Worker script. There is nothing here yet that
+  // needs to run server-side (no analytics collector, no dynamic route).
+  "assets": {
+    "directory": "./dist/",
+    "not_found_handling": "404-page"
+  }
+}

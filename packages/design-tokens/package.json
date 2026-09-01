@@ -1,0 +1,12 @@
+{
+  "name": "@killmutants/design-tokens",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The single source of colour, space, and type for the site.",
+  "exports": {
+    "./tokens.css": "./tokens.css"
+  },
+  "files": [
+    "tokens.css"
+  ]
+}

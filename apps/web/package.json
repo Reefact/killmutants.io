@@ -1,0 +1,21 @@
+{
+  "name": "@killmutants/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The Astro application: the killmutants.io landing page.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@killmutants/design-tokens": "workspace:*"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "astro": "^7.2.9",
+    "typescript": "^5.9.3"
+  }
+}

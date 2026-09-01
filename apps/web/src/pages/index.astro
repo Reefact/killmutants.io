@@ -1,0 +1,130 @@
+---
+import "../styles/base.css";
+
+const GITHUB_URL = "https://github.com/Reefact/kill-mutants";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KillMutants — Mutation Testing for .NET (Coming Soon)</title>
+    <meta
+      name="description"
+      content="KillMutants is a new mutation testing tool for .NET, built native for xUnit v3 4.x and Microsoft Testing Platform v2. Currently in development."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik+Wet+Paint&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div style="position: relative; overflow: hidden;">
+      <div class="noise"></div>
+
+      <!-- HERO -->
+      <div
+        style="position: relative; min-height: 70vh; padding: 64px 24px 0; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 24px; overflow: hidden;"
+      >
+        <img
+          src="/images/banner-hero.jpg"
+          alt=""
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 0; opacity: 0.61;"
+        />
+        <div
+          style="position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, #0d0c0a 0%, rgba(13,12,10,0) 15%, rgba(13,12,10,0) 87.5%, #0d0c0a 100%), linear-gradient(0deg, #0d0c0a 0%, rgba(13,12,10,0) 30%, rgba(13,12,10,0) 75%, rgba(13,12,10,0.6) 100%);"
+        >
+        </div>
+        <div class="grime" style="z-index: 2;"></div>
+
+        <div style="position: relative; z-index: 3; display: flex; align-items: center; gap: 12px;">
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#b026ff"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style="filter: drop-shadow(0 1px 3px rgba(0,0,0,0.95)) drop-shadow(0 4px 16px rgba(0,0,0,0.85));"
+          >
+            <path
+              d="M12 2.5c-4.1 0-7.2 3-7.2 7v4.2c0 1.1.6 2.1 1.6 2.6L5 20h3.2l.9-1.8h5.8l.9 1.8H19l-1.4-3.7c1-.5 1.6-1.5 1.6-2.6V9.5c0-4-3.1-7-7.2-7Z"
+            ></path>
+            <path d="M8.7 9.8 10.3 11.4M10.3 9.8 8.7 11.4"></path>
+            <path d="M15.3 9.8 13.7 11.4M13.7 9.8 15.3 11.4"></path>
+          </svg>
+          <div class="eyebrow" style="text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 4px 20px rgba(0,0,0,0.9);">
+            Mutation Testing for .NET &mdash; Coming Soon
+          </div>
+        </div>
+
+        <h1
+          class="display"
+          style="position: relative; z-index: 3; margin: 0; font-size: clamp(40px, 8vw, 84px); text-shadow: 3px 3px 0 rgba(0,0,0,0.75), 6px 12px 20px rgba(0,0,0,0.55);"
+        >
+          KILL MUTANTS
+        </h1>
+
+        <p
+          style="position: relative; z-index: 3; max-width: 620px; font-size: 18px; font-weight: 500; line-height: 1.6; color: var(--km-text-muted); text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 3px 18px rgba(0,0,0,0.75);"
+        >
+          Your unit tests pass. That doesn't mean they work. KillMutants is a new mutation testing
+          tool for .NET, built native for <span style="color: var(--km-terminal-green);">xUnit v3 4.x</span>
+          and Microsoft Testing Platform&nbsp;v2 &mdash; currently in development.
+        </p>
+
+        <a href={GITHUB_URL} class="btn-primary" style="position: relative; z-index: 3; margin-top: 8px;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+            ></path>
+          </svg>
+          Star on GitHub
+        </a>
+      </div>
+
+      <!-- PITCH -->
+      <div style="padding: 56px 24px 72px; max-width: 1088px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+          <div class="pitch-card">
+            <div class="pitch-index">01</div>
+            <div class="pitch-title">Passing tests aren't proof</div>
+            <div class="pitch-body">
+              Mutation testing injects small, deliberate bugs into your own code and checks
+              whether your test suite notices. Green coverage numbers don't tell you that &mdash;
+              a killed mutant does.
+            </div>
+          </div>
+          <div class="pitch-card">
+            <div class="pitch-index">02</div>
+            <div class="pitch-title">Built for where .NET testing is going</div>
+            <div class="pitch-body">
+              Native support for xUnit v3 4.x and Microsoft Testing Platform v2 from day one
+              &mdash; not an older architecture catching up to them later.
+            </div>
+          </div>
+          <div class="pitch-card">
+            <div class="pitch-index">03</div>
+            <div class="pitch-title">In active development</div>
+            <div class="pitch-body">
+              KillMutants is being built right now. Watch the repo to follow progress and get
+              notified the moment it's ready to run against your own test suite.
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="border-top: 1px solid var(--km-border); padding-top: 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;"
+        >
+          <div class="footer-link">killmutants.io</div>
+          <a class="footer-link" href={GITHUB_URL}>github.com/Reefact/kill-mutants</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

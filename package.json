@@ -1,0 +1,23 @@
+{
+  "name": "killmutants-io",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The killmutants.io website.",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @killmutants/web dev",
+    "build": "pnpm --filter @killmutants/web build",
+    "check": "pnpm --filter @killmutants/web check",
+    "serve": "wrangler dev",
+    "preview": "wrangler versions upload",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "wrangler": "^4.127.0"
+  }
+}
