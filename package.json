@@ -9,9 +9,9 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "pnpm --filter @killmutants/web dev",
-    "build": "pnpm --filter @killmutants/web build",
-    "check": "pnpm --filter @killmutants/web check",
+    "dev": "./scripts/generate-version.sh && node scripts/generate-release-note.mjs && pnpm --filter @killmutants/web dev",
+    "build": "./scripts/build-site.sh",
+    "check": "./scripts/generate-version.sh && node scripts/generate-release-note.mjs && pnpm --filter @killmutants/web check",
     "serve": "wrangler dev",
     "preview": "wrangler versions upload",
     "deploy": "wrangler deploy"
