@@ -9,7 +9,7 @@ implementation — not production code.
 - `Main.dc.html` — full landing page mockup (later, once the tool is ready)
 - `ComingSoon.dc.html` — announcement/teaser page (the tool isn't ready yet, this ships first)
 - `canvas.json` — canvas layout manifest
-- `banner-hero.jpg` — downsampled/re-encoded copy of `banner.png` (repo root) used as the hero background
+- `banner-hero.jpg` — downsampled/re-encoded copy of `assets/brand/banner.png` used as the hero background
 
 ## Direction
 
