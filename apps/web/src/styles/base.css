@@ -15,10 +15,12 @@ body {
 a {
   color: var(--km-static-blue);
   text-decoration: none;
+  transition: color 0.15s ease, text-shadow 0.15s ease;
 }
 
 a:hover {
-  color: var(--km-mutant-violet);
+  color: var(--km-mutant-violet-bright);
+  text-shadow: 0 0 10px rgba(197, 82, 255, 0.55);
 }
 
 .noise {
@@ -73,7 +75,7 @@ a:hover {
 
 .btn-primary:hover {
   color: var(--km-bg);
-  background: #c552ff;
+  background: var(--km-mutant-violet-bright);
   box-shadow: 0 0 20px rgba(176, 38, 255, 0.55);
 }
 
