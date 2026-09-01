@@ -70,6 +70,10 @@ a:hover {
   color: var(--km-bg);
 }
 
+.btn-primary:hover {
+  color: var(--km-bg);
+}
+
 .pitch-card {
   border: 1px solid var(--km-border);
   border-radius: 6px;
