@@ -1,0 +1,101 @@
+---
+import type { SiteReleaseSummary } from '../site-release';
+
+interface Props {
+  readonly release: SiteReleaseSummary;
+  /** Set only on the latest release — the one card that links out to GitHub. */
+  readonly tagUrl?: string;
+}
+
+const { release, tagUrl } = Astro.props;
+---
+
+<article class="release-card">
+  <header>
+    <h3>{release.tag}</h3>
+    <time datetime={release.date}>{release.date}</time>
+  </header>
+
+  {release.summaryHtml.map((paragraph) => <p class="summary" set:html={paragraph} />)}
+
+  {
+    release.sections.map((section) => (
+      <div class="rubric">
+        <h4>{section.label}</h4>
+        <ul>
+          {section.items.map((item) => (
+            <li set:html={item} />
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+
+  {
+    tagUrl && (
+      <p class="view-on-github">
+        <a href={tagUrl} target="_blank" rel="noopener noreferrer">
+          View on GitHub
+        </a>
+      </p>
+    )
+  }
+</article>
+
+<style>
+  .release-card {
+    border: 1px solid var(--km-border);
+    border-radius: 6px;
+    background: var(--km-bg-panel);
+    padding: 24px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  h3 {
+    margin: 0;
+    font-family: var(--km-font-mono);
+    font-size: 15px;
+    color: var(--km-title);
+  }
+
+  time {
+    font-family: var(--km-font-mono);
+    font-size: 12px;
+    color: var(--km-text-dim);
+  }
+
+  .summary {
+    margin: 0;
+    color: var(--km-text-muted);
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+
+  .rubric h4 {
+    margin: 0 0 6px;
+    font-size: 13px;
+    color: var(--km-static-blue);
+  }
+
+  .rubric ul {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--km-text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .view-on-github {
+    margin: 4px 0 0;
+    font-size: 13px;
+  }
+</style>

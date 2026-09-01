@@ -5,3 +5,8 @@
 
 /
   Cache-Control: public, max-age=0, must-revalidate
+
+# version.json answers "what is live right now" — a cached copy would answer "what
+# was live when you last asked", which is the one answer it must never give.
+/version.json
+  Cache-Control: no-store
