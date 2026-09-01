@@ -68,10 +68,13 @@ a:hover {
   gap: 10px;
   background: var(--km-mutant-violet);
   color: var(--km-bg);
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .btn-primary:hover {
   color: var(--km-bg);
+  background: #c552ff;
+  box-shadow: 0 0 20px rgba(176, 38, 255, 0.55);
 }
 
 .pitch-card {
