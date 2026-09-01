@@ -1,0 +1,402 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Wet+Paint&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #0d0c0a;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      color: #e4ddc9;
+    }
+    a { color: #b026ff; text-decoration: none; }
+    a:hover { color: #e619b3; }
+
+    .noise {
+      position: absolute;
+      inset: 0;
+      opacity: 0.09;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+    }
+
+    .grime {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 500px 300px at 8% 15%, rgba(0,0,0,0.5), transparent 65%),
+        radial-gradient(ellipse 600px 400px at 95% 60%, rgba(0,0,0,0.4), transparent 65%),
+        linear-gradient(180deg, rgba(0,0,0,0.15), transparent 20%, transparent 80%, rgba(0,0,0,0.3));
+    }
+
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: #a89f88;
+    }
+
+    .display {
+      font-family: 'Rubik Wet Paint', cursive;
+      line-height: 1;
+      letter-spacing: 0.01em;
+    }
+
+    .display-paint {
+      color: #f2f1ec;
+    }
+
+    .btn-primary {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 16px 28px;
+      border-radius: 3px;
+      border: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer;
+    }
+
+    .btn-ghost {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      padding: 16px 24px;
+      border-radius: 3px;
+      border: 1px solid rgba(233,230,225,0.18);
+      background: transparent;
+      color: #e9e6e1;
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #847c68;
+    }
+
+    .swatch {
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.06);
+      overflow: hidden;
+      background: #16140f;
+    }
+
+    .swatch-fill { height: 92px; }
+
+    .swatch-meta {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .swatch-name { font-size: 14px; font-weight: 600; }
+    .swatch-hex { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #9a9280; }
+    .swatch-use { font-size: 12px; color: #847c68; line-height: 1.5; }
+
+    .type-card {
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 6px;
+      background: #141210;
+      padding: 28px 32px;
+    }
+
+    .code-block {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13.5px;
+      line-height: 1.7;
+      background: #110f0c;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 6px;
+      padding: 20px 22px;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    .code-kw { color: #e619b3; }
+    .code-str { color: #39ff8f; }
+    .code-signal { color: #4fd1e0; }
+    .code-del { color: #847c68; text-decoration: line-through; }
+    .code-add { color: #ff8a3d; }
+    .code-cmt { color: #847c68; }
+
+    .screen {
+      border-radius: 8px;
+      border: 2px solid rgba(255,255,255,0.10);
+      background: linear-gradient(180deg, #18160f 0%, #0f0d0a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screen::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 3px);
+      pointer-events: none;
+    }
+
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 5px 10px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    .mutant-row {
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 16px 22px;
+    }
+    .mutant-row:last-child { border-bottom: none; }
+
+    .mutant-line {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+
+    .compare-card {
+      border-radius: 8px;
+      padding: 28px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .compare-item {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .compare-item b { display: block; font-size: 14.5px; margin-bottom: 2px; }
+    .compare-item span { color: #a89f88; font-size: 13px; }
+  </style>
+</helmet>
+
+<div style="position: relative; width: 1440px; background: #0d0c0a; overflow: hidden;">
+  <div class="noise"></div>
+
+  <!-- HERO -->
+  <div style="position: relative; height: 617px; padding: 96px 96px 80px; display: flex; flex-direction: column; justify-content: center; gap: 28px; border-bottom: 1px solid rgba(233,225,201,0.08); background: #0d0c0a; overflow: hidden;">
+    <img src="banner-hero.jpg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 0; opacity: 0.72;">
+    <div style="position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, #0d0c0a 0%, rgba(13,12,10,0) 15%, rgba(13,12,10,0) 87.5%, #0d0c0a 100%), linear-gradient(0deg, #0d0c0a 0%, rgba(13,12,10,0) 30%, rgba(13,12,10,0) 75%, rgba(13,12,10,0.6) 100%);"></div>
+    <div class="grime" style="z-index: 2;"></div>
+    <div style="position: relative; z-index: 3; display: flex; align-items: center; gap: 12px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{accentViolet}}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2.5c-4.1 0-7.2 3-7.2 7v4.2c0 1.1.6 2.1 1.6 2.6L5 20h3.2l.9-1.8h5.8l.9 1.8H19l-1.4-3.7c1-.5 1.6-1.5 1.6-2.6V9.5c0-4-3.1-7-7.2-7Z"/>
+        <path d="M8.7 9.8 10.3 11.4M10.3 9.8 8.7 11.4"/>
+        <path d="M15.3 9.8 13.7 11.4M13.7 9.8 15.3 11.4"/>
+      </svg>
+      <div class="eyebrow">Mutation Testing for .NET</div>
+    </div>
+
+    <div class="display display-paint" style="position: relative; z-index: 3; font-size: 96px; text-shadow: 3px 3px 0 rgba(0,0,0,0.75), 6px 12px 20px rgba(0,0,0,0.55);">
+      KILL MUTANTS
+    </div>
+
+    <div style="position: relative; z-index: 3; max-width: 560px; font-size: 19px; font-weight: 500; line-height: 1.6; color: #b8b2a2; text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 3px 18px rgba(0,0,0,0.75);">
+      Your unit tests pass. That doesn't mean they work. KillMutants injects bugs into your own code and hunts down every test suite too weak to catch them &mdash; built native for <span style="color: {{terminalGreen}};">xUnit v3 4.x</span> and Microsoft Testing Platform&nbsp;v2, not bolted on after the fact.
+    </div>
+
+    <div style="position: relative; z-index: 3; display: flex; align-items: center; gap: 16px; margin-top: 12px;">
+      <div class="btn-primary" style="background: {{accentViolet}}; color: #0a090c;">dotnet tool install -g KillMutants</div>
+      <div class="btn-ghost">View on GitHub &rarr;</div>
+    </div>
+  </div>
+
+  <!-- PALETTE -->
+  <div style="padding: 72px 96px; display: flex; flex-direction: column; gap: 28px;">
+    <div class="section-label">01 &mdash; Field Kit / Palette</div>
+    <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px;">
+
+      <div class="swatch">
+        <div class="swatch-fill" style="background: #0a090c;"></div>
+        <div class="swatch-meta">
+          <div class="swatch-name">Void</div>
+          <div class="swatch-hex">#0A090C</div>
+          <div class="swatch-use">Base background &mdash; the ruined street at night.</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-fill" style="background: {{accentViolet}};"></div>
+        <div class="swatch-meta">
+          <div class="swatch-name">Mutant Violet</div>
+          <div class="swatch-hex">#B026FF</div>
+          <div class="swatch-use">Primary accent &mdash; masks, CTAs, links, survived mutants.</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-fill" style="background: {{terminalGreen}};"></div>
+        <div class="swatch-meta">
+          <div class="swatch-name">Terminal Green</div>
+          <div class="swatch-hex">#39FF8F</div>
+          <div class="swatch-use">Code, status, killed mutants &mdash; the good outcome.</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-fill" style="background: #4fd1e0;"></div>
+        <div class="swatch-meta">
+          <div class="swatch-name">Static Blue</div>
+          <div class="swatch-hex">#4FD1E0</div>
+          <div class="swatch-use">Signal accent &mdash; CRT/terminal cold cyan, links, secondary UI states.</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-fill" style="background: #d81e3a;"></div>
+        <div class="swatch-meta">
+          <div class="swatch-name">Corrupted Red</div>
+          <div class="swatch-hex">#D81E3A</div>
+          <div class="swatch-use">Critical errors, drip accents &mdash; used rarely.</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-fill" style="background: #ff8a3d;"></div>
+        <div class="swatch-meta">
+          <div class="swatch-name">Spark Orange</div>
+          <div class="swatch-hex">#FF8A3D</div>
+          <div class="swatch-use">Warnings, hover sparks, in-progress states.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TYPOGRAPHY -->
+  <div style="padding: 0 96px 72px; display: flex; flex-direction: column; gap: 28px;">
+    <div class="section-label">02 &mdash; Type System</div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div class="type-card" style="display: flex; flex-direction: column; gap: 14px;">
+        <div class="swatch-hex">Display &mdash; Rubik Wet Paint &mdash; headlines only, used sparingly</div>
+        <div class="display display-paint" style="font-size: 40px; text-shadow: 2px 2px 0 rgba(0,0,0,0.75), 4px 8px 14px rgba(0,0,0,0.5);">SURVIVED</div>
+      </div>
+
+      <div class="type-card" style="display: flex; flex-direction: column; gap: 14px;">
+        <div class="swatch-hex">Body &mdash; Space Grotesk &mdash; docs, paragraphs, UI copy</div>
+        <div style="font-size: 15.5px; line-height: 1.7; color: #c2bba5;">Mutants are small, deliberate corruptions of your production code &mdash; a flipped boolean, a shifted boundary, a swapped operator. A strong test suite kills them all. Anything left standing is a gap in your coverage you didn't know you had.</div>
+      </div>
+    </div>
+
+    <div class="code-block">
+<span class="code-cmt">// Mutant #7 &mdash; Wallet.cs:42 &mdash; conditional boundary</span>
+<span class="code-kw">public</span> <span class="code-kw">bool</span> HasSufficientFunds(<span class="code-kw">decimal</span> amount)
+{
+    <span class="code-kw">return</span> <span class="code-del">balance &gt;= amount;</span>
+           <span class="code-add">balance &gt; amount;</span>  <span class="code-cmt">// mutated boundary</span>
+}
+
+<span class="code-signal">$</span> <span class="code-str">killmutants run --project Wallet.Tests</span>
+</div>
+  </div>
+
+  <!-- MUTATION REPORT COMPONENT -->
+  <div style="padding: 0 96px 72px; display: flex; flex-direction: column; gap: 28px;">
+    <div class="section-label">03 &mdash; Mutation Report</div>
+
+    <div class="screen">
+      <div style="position: relative; padding: 18px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #c2bba5;">src/Wallet.cs &mdash; 5 mutants</div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: {{terminalGreen}};">40% mutation score</div>
+      </div>
+
+      <div style="position: relative;">
+        <div class="mutant-row" style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+          <div class="mutant-line" style="color: #c2bba5;">balance &gt;= amount <span style="color:#847c68;">&rarr;</span> balance &gt; amount</div>
+          <div class="badge" style="background: rgba(57,255,143,0.12); color: {{terminalGreen}}; border: 1px solid rgba(57,255,143,0.35);">KILLED</div>
+        </div>
+        <div class="mutant-row" style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+          <div class="mutant-line" style="color: #c2bba5;">if (alive) mutate(); <span style="color:#847c68;">&rarr;</span> if (!alive) mutate();</div>
+          <div class="badge" style="background: rgba(176,38,255,0.14); color: #e19bff; border: 1px solid rgba(176,38,255,0.4);">SURVIVED</div>
+        </div>
+        <div class="mutant-row" style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+          <div class="mutant-line" style="color: #c2bba5;">return true; <span style="color:#847c68;">&rarr;</span> return false;</div>
+          <div class="badge" style="background: rgba(57,255,143,0.12); color: {{terminalGreen}}; border: 1px solid rgba(57,255,143,0.35);">KILLED</div>
+        </div>
+        <div class="mutant-row" style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+          <div class="mutant-line" style="color: #c2bba5;">0xDEADBEEF <span style="color:#847c68;">&rarr;</span> 0x00000000</div>
+          <div class="badge" style="background: rgba(255,138,61,0.14); color: #ff8a3d; border: 1px solid rgba(255,138,61,0.4);">TIMEOUT</div>
+        </div>
+        <div class="mutant-row" style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+          <div class="mutant-line" style="color: #c2bba5;">attempts++; <span style="color:#847c68;">&rarr;</span> ++attempts;</div>
+          <div class="badge" style="background: rgba(79,209,224,0.14); color: #4fd1e0; border: 1px solid rgba(79,209,224,0.4);">EQUIVALENT</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON -->
+  <div style="padding: 0 96px 100px; display: flex; flex-direction: column; gap: 28px;">
+    <div class="section-label">04 &mdash; Why Native Matters</div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div class="compare-card" style="background: rgba(57,255,143,0.05); border-color: rgba(57,255,143,0.3);">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; color: {{terminalGreen}}; margin-bottom: 18px;">KILLMUTANTS</div>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; gap: 12px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39ff8f" stroke-width="2.5" style="flex-shrink:0; margin-top: 2px;"><path d="M20 6 9 17l-5-5"/></svg>
+            <div class="compare-item"><b>Native Microsoft Testing Platform v2</b><span>Built on the current MTP spec from day one.</span></div>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39ff8f" stroke-width="2.5" style="flex-shrink:0; margin-top: 2px;"><path d="M20 6 9 17l-5-5"/></svg>
+            <div class="compare-item"><b>xUnit v3 4.x out of the box</b><span>No warnings, no partial mutation coverage.</span></div>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39ff8f" stroke-width="2.5" style="flex-shrink:0; margin-top: 2px;"><path d="M20 6 9 17l-5-5"/></svg>
+            <div class="compare-item"><b>No legacy runner shims</b><span>One architecture, not eight years of compatibility layers.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare-card" style="background: rgba(255,138,61,0.04); border-color: rgba(255,138,61,0.25);">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; color: #ff8a3d; margin-bottom: 18px;">LEGACY TOOLS (E.G. STRYKER.NET)</div>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; gap: 12px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff8a3d" stroke-width="2.5" style="flex-shrink:0; margin-top: 2px;"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/></svg>
+            <div class="compare-item"><b>VSTest-era architecture</b><span>Core design dates back to 2018.</span></div>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff8a3d" stroke-width="2.5" style="flex-shrink:0; margin-top: 2px;"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/></svg>
+            <div class="compare-item"><b>MTP support in preview</b><span>Opt-in flag, shipped March 2026.</span></div>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff8a3d" stroke-width="2.5" style="flex-shrink:0; margin-top: 2px;"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/></svg>
+            <div class="compare-item"><b>xUnit v3 historically unreliable</b><span>Long-standing issues mutating v3 test projects.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size: 11.5px; color: #5c5646; font-family: 'JetBrains Mono', monospace;">[SOURCE NEEDED] &mdash; cite public Stryker.NET docs/changelog and dates before shipping this comparison.</div>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"accentViolet":{"editor":"color","default":"#b026ff","section":"Palette"},"terminalGreen":{"editor":"color","default":"#39ff8f","section":"Palette"}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      accentViolet: this.props.accentViolet ?? '#b026ff',
+      terminalGreen: this.props.terminalGreen ?? '#39ff8f',
+    };
+  }
+}
+</script>
+</body>
+</html>
