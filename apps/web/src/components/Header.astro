@@ -206,4 +206,21 @@ const homeHref = pathForLocale("/", locale);
     height: 16px;
     background: var(--km-border);
   }
+
+  /* Below this, brand + nav no longer fit on one line (nav-divider, the language
+   * name, and its caret push it over 320px alongside "KILLMUTANTS" otherwise) —
+   * let nav wrap to its own row instead of clipping or overlapping the brand. */
+  @media (max-width: 480px) {
+    .site-header {
+      padding: 16px 20px;
+      flex-wrap: wrap;
+      row-gap: 10px;
+    }
+
+    nav {
+      width: 100%;
+      justify-content: flex-end;
+      gap: 16px;
+    }
+  }
 </style>

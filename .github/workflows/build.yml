@@ -4,6 +4,7 @@ on:
   pull_request:
   push:
     branches: [main]
+    tags: ["release/**"]
 
 jobs:
   build:
@@ -45,7 +46,7 @@ jobs:
           retention-days: 7
 
       - name: Upload built site
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/release/'))
         uses: actions/upload-artifact@v4
         with:
           name: dist
@@ -57,7 +58,7 @@ jobs:
   # not the artifact the browser tests ran against.
   deploy:
     needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/release/'))
     runs-on: ubuntu-latest
     environment: production
     permissions:

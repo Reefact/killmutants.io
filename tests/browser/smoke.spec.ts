@@ -34,5 +34,23 @@ for (const { locale, home, version } of PAGES) {
       await expect(github).toHaveAttribute("rel", /noopener/);
       await expect(github).toHaveAttribute("href", "https://github.com/Reefact/kill-mutants");
     });
+
+    test("the language selector stays reachable at a narrow (320px) viewport", async ({ page }) => {
+      await page.setViewportSize({ width: 320, height: 640 });
+      await page.goto(version);
+
+      const brand = page.locator("header .brand");
+      const summary = page.locator(".language-selector summary");
+      const [brandBox, summaryBox] = await Promise.all([brand.boundingBox(), summary.boundingBox()]);
+
+      expect(brandBox).not.toBeNull();
+      expect(summaryBox).not.toBeNull();
+      expect(summaryBox!.x + summaryBox!.width).toBeLessThanOrEqual(320);
+      // Nav wraps below the brand at this width rather than overlapping it.
+      expect(summaryBox!.y).toBeGreaterThanOrEqual(brandBox!.y + brandBox!.height);
+
+      await summary.click();
+      await expect(page.locator(".language-selector a")).toBeVisible();
+    });
   });
 }
