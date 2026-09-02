@@ -46,19 +46,24 @@ jobs:
           retention-days: 7
 
       - name: Upload built site
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/release/'))
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/release/')
         uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist/
           retention-days: 1
 
+  # A TAG PUBLISHES. A branch does not, including main — same convention as
+  # justdummies.io: the unit of publication is a release someone decided to cut,
+  # not a commit someone happened to merge. main is still built and tested on
+  # every push; it just never deploys on its own.
+  #
   # Deploys exactly what `build` just tested — a fresh `wrangler deploy` build
   # would ship whatever the working tree happens to contain at that moment,
   # not the artifact the browser tests ran against.
   deploy:
     needs: build
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/release/'))
+    if: startsWith(github.ref, 'refs/tags/release/')
     runs-on: ubuntu-latest
     environment: production
     permissions:
@@ -67,8 +72,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # wrangler-action sees pnpm-lock.yaml and shells out to `pnpm dlx` to install
-      # wrangler — pnpm has to actually be on PATH for that, same as the build job.
       - uses: pnpm/action-setup@v4
         with:
           version: 10.33.0
@@ -78,14 +81,21 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
 
+      # No wrangler-action: the repository pins one wrangler in package.json, and
+      # `pnpm run deploy` is the command a maintainer runs by hand. wrangler-action
+      # tries to install its own wrangler with `pnpm add` at the workspace root,
+      # which pnpm refuses outright (ERR_PNPM_ADDING_TO_ROOT) — installing the
+      # workspace properly avoids that and deploys the version everything else here
+      # was already tested against.
+      - run: pnpm install --frozen-lockfile
+
       - uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
 
       - name: Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm run deploy
