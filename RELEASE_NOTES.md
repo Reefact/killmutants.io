@@ -11,3 +11,7 @@ repository's own history.
 - First version of the site: a "coming soon" announcement page with the KillMutants hero,
   a short pitch, and a link to the tool's GitHub repository.
 - The site is now deployed on Cloudflare Workers, reachable at `killmutants.io`.
+- Every page now carries a shared header: the KillMutants mark (links back to the home
+  page), a link to the tool's GitHub repository, and a language selector.
+- Added a `/version` page, showing what this deployment is (release, commit, build time)
+  and what the site last shipped — this changelog, in other words.
