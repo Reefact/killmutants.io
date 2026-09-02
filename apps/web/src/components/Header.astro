@@ -56,14 +56,14 @@ const homeHref = pathForLocale("/", locale);
           KILLMUTANTS
         </a>
 
-        <nav aria-label={t("nav.primary")}>
+        <nav class="nav-links" aria-label={t("nav.primary")}>
           <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
           <a href={site.repository} target="_blank" rel="noopener noreferrer">
             {t("nav.github")}
           </a>
-          <span class="nav-divider" aria-hidden="true" />
-          <LanguageSelector pathname={pathname} />
         </nav>
+        <span class="nav-divider" aria-hidden="true" />
+        <LanguageSelector pathname={pathname} />
       </header>
 
       <div class="banner-title">
@@ -82,14 +82,14 @@ const homeHref = pathForLocale("/", locale);
         KILLMUTANTS
       </a>
 
-      <nav aria-label={t("nav.primary")}>
+      <nav class="nav-links" aria-label={t("nav.primary")}>
         <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
         <a href={site.repository} target="_blank" rel="noopener noreferrer">
           {t("nav.github")}
         </a>
-        <span class="nav-divider" aria-hidden="true" />
-        <LanguageSelector pathname={pathname} />
       </nav>
+      <span class="nav-divider" aria-hidden="true" />
+      <LanguageSelector pathname={pathname} />
     </header>
   )
 }
@@ -146,9 +146,10 @@ const homeHref = pathForLocale("/", locale);
     z-index: 4;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 24px;
     padding: 20px 40px;
     font-family: var(--km-font-mono);
+    font-size: 13px;
   }
 
   .site-header:not(.overlaid) {
@@ -164,7 +165,8 @@ const homeHref = pathForLocale("/", locale);
   }
 
   .site-header.overlaid .brand,
-  .site-header.overlaid nav {
+  .site-header.overlaid .nav-links,
+  .site-header.overlaid :global(.language-selector) {
     text-shadow: var(--overlaidShadow);
   }
 
@@ -190,29 +192,31 @@ const homeHref = pathForLocale("/", locale);
     text-shadow: 0 0 16px rgba(176, 38, 255, 0.5);
   }
 
-  nav {
+  /* Pushed to the right of the brand; the divider and language selector that
+   * follow it in source order sit right next to it (no space-between needed). */
+  .nav-links {
     display: flex;
     align-items: center;
     gap: 24px;
-    font-size: 13px;
+    margin-left: auto;
   }
 
-  nav a {
+  .nav-links a {
     color: var(--km-text-dim);
   }
 
-  /* `nav a`'s own color above already outweighs the site-wide `a:hover` glow (its
-   * scoped attribute selector makes it more specific), so without this the header's
-   * links never light up on hover the way every other link on the site does. */
-  nav a:hover {
+  /* `.nav-links a`'s own color above already outweighs the site-wide `a:hover` glow
+   * (its scoped attribute selector makes it more specific), so without this the
+   * header's links never light up on hover the way every other link on the site does. */
+  .nav-links a:hover {
     color: var(--km-mutant-violet-bright);
   }
 
-  .site-header.overlaid nav a:hover {
+  .site-header.overlaid .nav-links a:hover {
     text-shadow: var(--overlaidShadow), 0 0 10px rgba(197, 82, 255, 0.55);
   }
 
-  .site-header:not(.overlaid) nav a:hover {
+  .site-header:not(.overlaid) .nav-links a:hover {
     text-shadow: 0 0 10px rgba(197, 82, 255, 0.55);
   }
 
@@ -222,9 +226,10 @@ const homeHref = pathForLocale("/", locale);
     background: var(--km-border);
   }
 
-  /* Below this, brand + nav no longer fit on one line (nav-divider, the language
-   * name, and its caret push it over 320px alongside "KILLMUTANTS" otherwise) —
-   * let nav wrap to its own row instead of clipping or overlapping the brand. */
+  /* Below this, brand + nav-links + language selector no longer fit on one line.
+   * Keep the language selector on the brand's row (right-aligned) and drop the
+   * nav links (GitHub, future Docs links, …) to their own centered row below,
+   * instead of clipping or overlapping the brand. */
   @media (max-width: 480px) {
     .site-header {
       padding: 16px 20px;
@@ -232,10 +237,19 @@ const homeHref = pathForLocale("/", locale);
       row-gap: 10px;
     }
 
-    nav {
-      width: 100%;
-      justify-content: flex-end;
-      gap: 16px;
+    .nav-divider {
+      display: none;
+    }
+
+    .nav-links {
+      order: 3;
+      flex-basis: 100%;
+      margin-left: 0;
+      justify-content: center;
+    }
+
+    .site-header :global(.language-selector) {
+      margin-left: auto;
     }
   }
 </style>

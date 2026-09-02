@@ -30,6 +30,7 @@ const t = useTranslations(localeFromPath(Astro.url.pathname));
 
     <div style="position: relative; z-index: 3; display: flex; align-items: center; gap: 12px;">
       <svg
+        class="eyebrow-icon"
         width="22"
         height="22"
         viewBox="0 0 24 24"
@@ -121,6 +122,13 @@ const t = useTranslations(localeFromPath(Astro.url.pathname));
   @media (max-width: 480px) {
     .hero {
       padding-top: 96px !important;
+    }
+
+    /* Redundant with the header's own brand icon once the header wraps below
+     * the hero eyebrow on mobile (see Header.astro) — drop it there and let
+     * the eyebrow text alone stay centered. */
+    .eyebrow-icon {
+      display: none;
     }
   }
 </style>
