@@ -12,6 +12,7 @@ const t = useTranslations(localeFromPath(Astro.url.pathname));
 
   <!-- HERO -->
   <div
+    class="hero"
     style="position: relative; flex: 1; padding: 40px 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 18px; overflow: hidden;"
   >
     <img
@@ -109,3 +110,17 @@ const t = useTranslations(localeFromPath(Astro.url.pathname));
     </div>
   </div>
 </div>
+
+<style>
+  /* Header is `overlaid` (position: absolute) here, so it takes no space in the
+   * hero's own flex layout — its vertically-centered content isn't aware of the
+   * header's height. Below 480px the header's nav wraps to a second row (see
+   * Header.astro), tall enough that the centered eyebrow can render underneath
+   * it. Force enough top padding to clear the wrapped header at that breakpoint;
+   * wider viewports keep the original padding untouched. */
+  @media (max-width: 480px) {
+    .hero {
+      padding-top: 96px !important;
+    }
+  }
+</style>
