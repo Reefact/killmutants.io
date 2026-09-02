@@ -5,54 +5,144 @@
  * GitHub, then the language selector. No "Home" link (the brand already is one) and
  * no link back to the current page.
  *
- * `transparent` (default) overlays the bar on a hero image with no background of its
- * own, text shadowed for legibility over whatever the image shows there. A page with
- * no hero would set it to false for a solid bar instead — no page needs that yet.
+ * Two ways a page uses this:
+ * - `banner` set: Header owns a compact, fixed-height decorative banner (image,
+ *   gradient fade, nav overlaid, a title block bottom-left) — the consistent
+ *   treatment every "secondary" page (like /version) gets for free, instead of each
+ *   one reinventing its own height and fade.
+ * - `banner` omitted: just the nav bar, `transparent` (default true) for a page
+ *   building its own hero underneath it (only the home page does this today, since
+ *   its hero is the page's primary content — full-height, not a decorative strip —
+ *   and doesn't fit this component's fixed banner shape).
  */
 import { site } from "../site";
 
-interface Props {
-  transparent?: boolean;
+interface Banner {
+  image: string;
+  title: string;
+  subtitle: string;
 }
 
-const { transparent = true } = Astro.props;
+interface Props {
+  transparent?: boolean;
+  banner?: Banner;
+}
+
+const { transparent = true, banner } = Astro.props;
+const overlaid = banner !== undefined || transparent;
 ---
 
-<header class={transparent ? "site-header transparent" : "site-header"}>
-  <a class="brand" href="/">
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#b026ff"
-      stroke-width="1.7"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <path
-        d="M12 2.5c-4.1 0-7.2 3-7.2 7v4.2c0 1.1.6 2.1 1.6 2.6L5 20h3.2l.9-1.8h5.8l.9 1.8H19l-1.4-3.7c1-.5 1.6-1.5 1.6-2.6V9.5c0-4-3.1-7-7.2-7Z"
-      ></path>
-      <path d="M8.7 9.8 10.3 11.4M10.3 9.8 8.7 11.4"></path>
-      <path d="M15.3 9.8 13.7 11.4M13.7 9.8 15.3 11.4"></path>
-    </svg>
-    KILLMUTANTS
-  </a>
+{
+  banner ? (
+    <div class="hero-banner">
+      <img src={banner.image} alt="" />
+      <div class="fade"></div>
 
-  <nav aria-label="Primary">
-    <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
-    <a href={site.repository} target="_blank" rel="noopener noreferrer">GitHub</a>
-    <span class="nav-divider" aria-hidden="true"></span>
-    <div class="language-selector" aria-label="Language">
-      <span lang="en">English</span>
-      <svg class="caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true" focusable="false">
-        <path d="M1 1l4 4 4-4"></path>
-      </svg>
+      <header class="site-header overlaid">
+        <a class="brand" href="/">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b026ff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2.5c-4.1 0-7.2 3-7.2 7v4.2c0 1.1.6 2.1 1.6 2.6L5 20h3.2l.9-1.8h5.8l.9 1.8H19l-1.4-3.7c1-.5 1.6-1.5 1.6-2.6V9.5c0-4-3.1-7-7.2-7Z" />
+            <path d="M8.7 9.8 10.3 11.4M10.3 9.8 8.7 11.4" />
+            <path d="M15.3 9.8 13.7 11.4M13.7 9.8 15.3 11.4" />
+          </svg>
+          KILLMUTANTS
+        </a>
+
+        <nav aria-label="Primary">
+          <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
+          <a href={site.repository} target="_blank" rel="noopener noreferrer">
+            GitHub
+          </a>
+          <span class="nav-divider" aria-hidden="true" />
+          <div class="language-selector" aria-label="Language">
+            <span lang="en">English</span>
+            <svg class="caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true" focusable="false">
+              <path d="M1 1l4 4 4-4" />
+            </svg>
+          </div>
+        </nav>
+      </header>
+
+      <div class="banner-title">
+        <h1>{banner.title}</h1>
+        <div class="eyebrow">{banner.subtitle}</div>
+      </div>
     </div>
-  </nav>
-</header>
+  ) : (
+    <header class={transparent ? "site-header overlaid" : "site-header"}>
+      <a class="brand" href="/">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b026ff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2.5c-4.1 0-7.2 3-7.2 7v4.2c0 1.1.6 2.1 1.6 2.6L5 20h3.2l.9-1.8h5.8l.9 1.8H19l-1.4-3.7c1-.5 1.6-1.5 1.6-2.6V9.5c0-4-3.1-7-7.2-7Z" />
+          <path d="M8.7 9.8 10.3 11.4M10.3 9.8 8.7 11.4" />
+          <path d="M15.3 9.8 13.7 11.4M13.7 9.8 15.3 11.4" />
+        </svg>
+        KILLMUTANTS
+      </a>
 
-<style>
+      <nav aria-label="Primary">
+        <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
+        <a href={site.repository} target="_blank" rel="noopener noreferrer">
+          GitHub
+        </a>
+        <span class="nav-divider" aria-hidden="true" />
+        <div class="language-selector" aria-label="Language">
+          <span lang="en">English</span>
+          <svg class="caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true" focusable="false">
+            <path d="M1 1l4 4 4-4" />
+          </svg>
+        </div>
+      </nav>
+    </header>
+  )
+}
+
+<style define:vars={{ overlaidShadow: overlaid ? "0 1px 3px rgba(0,0,0,0.9), 0 3px 14px rgba(0,0,0,0.75)" : "none" }}>
+  .hero-banner {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+  }
+
+  .hero-banner img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left center;
+    opacity: 0.75;
+  }
+
+  .hero-banner .fade {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(13, 12, 10, 0.35) 0%, rgba(13, 12, 10, 0.35) 100%),
+      linear-gradient(0deg, #0d0c0a 0%, rgba(13, 12, 10, 0) 45%, rgba(13, 12, 10, 0) 70%, rgba(13, 12, 10, 0.5) 100%);
+  }
+
+  .banner-title {
+    position: absolute;
+    left: 40px;
+    bottom: 28px;
+    z-index: 2;
+  }
+
+  .banner-title h1 {
+    font-family: var(--km-font-mono);
+    font-size: 30px;
+    font-weight: 500;
+    color: var(--km-title);
+    margin: 0;
+    text-shadow: var(--overlaidShadow);
+  }
+
+  .banner-title .eyebrow {
+    margin-top: 4px;
+    text-shadow: var(--overlaidShadow);
+  }
+
   .site-header {
     position: relative;
     z-index: 4;
@@ -63,21 +153,21 @@ const { transparent = true } = Astro.props;
     font-family: var(--km-font-mono);
   }
 
-  .site-header:not(.transparent) {
+  .site-header:not(.overlaid) {
     background: var(--km-bg-panel);
     border-bottom: 1px solid var(--km-border);
   }
 
-  .site-header.transparent {
+  .site-header.overlaid {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
   }
 
-  .site-header.transparent .brand,
-  .site-header.transparent nav {
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 3px 14px rgba(0, 0, 0, 0.75);
+  .site-header.overlaid .brand,
+  .site-header.overlaid nav {
+    text-shadow: var(--overlaidShadow);
   }
 
   .brand {
@@ -92,11 +182,14 @@ const { transparent = true } = Astro.props;
 
   .brand:hover {
     color: var(--km-title) !important;
-    text-shadow: 0 0 16px rgba(176, 38, 255, 0.5);
   }
 
-  .site-header.transparent .brand:hover {
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 3px 14px rgba(0, 0, 0, 0.75), 0 0 16px rgba(176, 38, 255, 0.5);
+  .site-header.overlaid .brand:hover {
+    text-shadow: var(--overlaidShadow), 0 0 16px rgba(176, 38, 255, 0.5);
+  }
+
+  .site-header:not(.overlaid) .brand:hover {
+    text-shadow: 0 0 16px rgba(176, 38, 255, 0.5);
   }
 
   nav {
