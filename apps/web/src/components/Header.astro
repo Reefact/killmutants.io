@@ -1,9 +1,15 @@
 ---
 /**
- * The bar every page carries: the brand (always links home), then whatever other
- * content pages exist (none yet — they go here, always to the left of GitHub), then
- * GitHub, then the language selector. No "Home" link (the brand already is one) and
- * no link back to the current page.
+ * The bar every page carries: the brand (always links home), then the language
+ * selector, then whatever other content pages exist (none yet — they go here,
+ * always to the left of GitHub), then GitHub. No "Home" link (the brand already
+ * is one) and no link back to the current page.
+ *
+ * Source order matches visual order at every breakpoint on purpose — below
+ * 480px the nav links wrap to their own centered row while the language
+ * selector stays on the brand's row, so putting the language selector before
+ * the nav links in markup keeps keyboard/AT tab order matching what's on
+ * screen at both sizes instead of drifting from it at one of them.
  *
  * Two ways a page uses this:
  * - `banner` set: Header owns a compact, fixed-height decorative banner (image,
@@ -172,12 +178,7 @@ const homeHref = pathForLocale("/", locale);
     text-shadow: var(--overlaidShadow);
   }
 
-  /* Source order is brand, language selector, divider, nav-links — that's the
-   * order keyboard/AT users tab through, matching the mobile layout below. On
-   * wider screens `order` restores the traditional visual arrangement (GitHub
-   * before the language selector) without touching tab order. */
   .brand {
-    order: 1;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -199,16 +200,16 @@ const homeHref = pathForLocale("/", locale);
     text-shadow: 0 0 16px rgba(176, 38, 255, 0.5);
   }
 
+  /* Pushes itself (and the divider + nav-links that follow it in source order)
+   * to the right of the brand — no space-between needed. */
   .site-header :global(.language-selector) {
-    order: 4;
+    margin-left: auto;
   }
 
   .nav-links {
-    order: 2;
     display: flex;
     align-items: center;
     gap: 24px;
-    margin-left: auto;
   }
 
   .nav-links a {
@@ -231,16 +232,16 @@ const homeHref = pathForLocale("/", locale);
   }
 
   .nav-divider {
-    order: 3;
     width: 1px;
     height: 16px;
     background: var(--km-border);
   }
 
-  /* Below this, brand + nav-links + language selector no longer fit on one line.
+  /* Below this, brand + language selector + nav-links no longer fit on one line.
    * Keep the language selector on the brand's row (right-aligned) and drop the
-   * nav links (GitHub, future Docs links, …) to their own centered row below,
-   * instead of clipping or overlapping the brand. */
+   * nav links (GitHub, future Docs links, …) — already last in source order, so
+   * no `order` override is needed — to their own centered row below, instead of
+   * clipping or overlapping the brand. */
   @media (max-width: 480px) {
     .site-header {
       padding: 16px 20px;
@@ -253,16 +254,9 @@ const homeHref = pathForLocale("/", locale);
     }
 
     .nav-links {
-      order: 3;
       flex-basis: 100%;
-      margin-left: 0;
       margin-top: 13px;
       justify-content: center;
-    }
-
-    .site-header :global(.language-selector) {
-      order: 2;
-      margin-left: auto;
     }
   }
 </style>
