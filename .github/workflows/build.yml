@@ -67,6 +67,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # wrangler-action sees pnpm-lock.yaml and shells out to `pnpm dlx` to install
+      # wrangler — pnpm has to actually be on PATH for that, same as the build job.
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
       - uses: actions/download-artifact@v4
         with:
           name: dist
