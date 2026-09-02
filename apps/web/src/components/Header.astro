@@ -9,12 +9,16 @@
  * - `banner` set: Header owns a compact, fixed-height decorative banner (image,
  *   gradient fade, nav overlaid, a title block bottom-left) — the consistent
  *   treatment every "secondary" page (like /version) gets for free, instead of each
- *   one reinventing its own height and fade.
+ *   one reinventing its own height and fade. `banner.title`/`banner.subtitle` are
+ *   already translated by the caller (`useTranslations(locale)`).
  * - `banner` omitted: just the nav bar, `transparent` (default true) for a page
  *   building its own hero underneath it (only the home page does this today, since
  *   its hero is the page's primary content — full-height, not a decorative strip —
  *   and doesn't fit this component's fixed banner shape).
  */
+import LanguageSelector from "./LanguageSelector.astro";
+import { localeFromPath } from "../i18n/routing";
+import { useTranslations } from "../i18n/ui";
 import { site } from "../site";
 
 interface Banner {
@@ -29,14 +33,16 @@ interface Props {
 }
 
 const { transparent = true, banner } = Astro.props;
-const overlaid = banner !== undefined || transparent;
+
+const pathname = Astro.url.pathname;
+const t = useTranslations(localeFromPath(pathname));
 ---
 
 {
   banner ? (
     <div class="hero-banner">
       <img src={banner.image} alt="" />
-      <div class="fade"></div>
+      <div class="fade" />
 
       <header class="site-header overlaid">
         <a class="brand" href="/">
@@ -48,18 +54,13 @@ const overlaid = banner !== undefined || transparent;
           KILLMUTANTS
         </a>
 
-        <nav aria-label="Primary">
+        <nav aria-label={t("nav.primary")}>
           <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
           <a href={site.repository} target="_blank" rel="noopener noreferrer">
-            GitHub
+            {t("nav.github")}
           </a>
           <span class="nav-divider" aria-hidden="true" />
-          <div class="language-selector" aria-label="Language">
-            <span lang="en">English</span>
-            <svg class="caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true" focusable="false">
-              <path d="M1 1l4 4 4-4" />
-            </svg>
-          </div>
+          <LanguageSelector pathname={pathname} />
         </nav>
       </header>
 
@@ -79,24 +80,19 @@ const overlaid = banner !== undefined || transparent;
         KILLMUTANTS
       </a>
 
-      <nav aria-label="Primary">
+      <nav aria-label={t("nav.primary")}>
         <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
         <a href={site.repository} target="_blank" rel="noopener noreferrer">
-          GitHub
+          {t("nav.github")}
         </a>
         <span class="nav-divider" aria-hidden="true" />
-        <div class="language-selector" aria-label="Language">
-          <span lang="en">English</span>
-          <svg class="caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true" focusable="false">
-            <path d="M1 1l4 4 4-4" />
-          </svg>
-        </div>
+        <LanguageSelector pathname={pathname} />
       </nav>
     </header>
   )
 }
 
-<style define:vars={{ overlaidShadow: overlaid ? "0 1px 3px rgba(0,0,0,0.9), 0 3px 14px rgba(0,0,0,0.75)" : "none" }}>
+<style define:vars={{ overlaidShadow: "0 1px 3px rgba(0,0,0,0.9), 0 3px 14px rgba(0,0,0,0.75)" }}>
   .hero-banner {
     position: relative;
     height: 300px;
@@ -207,19 +203,5 @@ const overlaid = banner !== undefined || transparent;
     width: 1px;
     height: 16px;
     background: var(--km-border);
-  }
-
-  .language-selector {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--km-text-dim);
-    cursor: pointer;
-  }
-
-  .language-selector .caret {
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.5;
   }
 </style>

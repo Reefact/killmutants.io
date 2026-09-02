@@ -1,13 +1,16 @@
 ---
-import type { SiteReleaseSummary } from '../site-release';
+import type { LocalisedSiteRelease } from "../site-release";
+import { localeFromPath } from "../i18n/routing";
+import { useTranslations } from "../i18n/ui";
 
 interface Props {
-  readonly release: SiteReleaseSummary;
+  readonly release: LocalisedSiteRelease;
   /** Set only on the latest release — the one card that links out to GitHub. */
   readonly tagUrl?: string;
 }
 
 const { release, tagUrl } = Astro.props;
+const t = useTranslations(localeFromPath(Astro.url.pathname));
 ---
 
 <article class="release-card">
@@ -35,7 +38,7 @@ const { release, tagUrl } = Astro.props;
     tagUrl && (
       <p class="view-on-github">
         <a href={tagUrl} target="_blank" rel="noopener noreferrer">
-          View on GitHub
+          {t("version.viewOnGithub")}
         </a>
       </p>
     )
