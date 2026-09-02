@@ -46,8 +46,9 @@ for (const { locale, home, version } of PAGES) {
       expect(brandBox).not.toBeNull();
       expect(summaryBox).not.toBeNull();
       expect(summaryBox!.x + summaryBox!.width).toBeLessThanOrEqual(320);
-      // Nav wraps below the brand at this width rather than overlapping it.
-      expect(summaryBox!.y).toBeGreaterThanOrEqual(brandBox!.y + brandBox!.height);
+      // The language selector stays on the brand's row (right-aligned) at this width;
+      // the nav links (GitHub, ...) are what wraps below instead.
+      expect(summaryBox!.x).toBeGreaterThanOrEqual(brandBox!.x + brandBox!.width);
 
       await summary.click();
       await expect(page.locator(".language-selector a")).toBeVisible();
