@@ -201,6 +201,21 @@ const homeHref = pathForLocale("/", locale);
     color: var(--km-text-dim);
   }
 
+  /* `nav a`'s own color above already outweighs the site-wide `a:hover` glow (its
+   * scoped attribute selector makes it more specific), so without this the header's
+   * links never light up on hover the way every other link on the site does. */
+  nav a:hover {
+    color: var(--km-mutant-violet-bright);
+  }
+
+  .site-header.overlaid nav a:hover {
+    text-shadow: var(--overlaidShadow), 0 0 10px rgba(197, 82, 255, 0.55);
+  }
+
+  .site-header:not(.overlaid) nav a:hover {
+    text-shadow: 0 0 10px rgba(197, 82, 255, 0.55);
+  }
+
   .nav-divider {
     width: 1px;
     height: 16px;
