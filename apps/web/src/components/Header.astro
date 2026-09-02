@@ -17,7 +17,7 @@
  *   and doesn't fit this component's fixed banner shape).
  */
 import LanguageSelector from "./LanguageSelector.astro";
-import { localeFromPath } from "../i18n/routing";
+import { localeFromPath, pathForLocale } from "../i18n/routing";
 import { useTranslations } from "../i18n/ui";
 import { site } from "../site";
 
@@ -35,7 +35,9 @@ interface Props {
 const { transparent = true, banner } = Astro.props;
 
 const pathname = Astro.url.pathname;
-const t = useTranslations(localeFromPath(pathname));
+const locale = localeFromPath(pathname);
+const t = useTranslations(locale);
+const homeHref = pathForLocale("/", locale);
 ---
 
 {
@@ -45,7 +47,7 @@ const t = useTranslations(localeFromPath(pathname));
       <div class="fade" />
 
       <header class="site-header overlaid">
-        <a class="brand" href="/">
+        <a class="brand" href={homeHref}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b026ff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 2.5c-4.1 0-7.2 3-7.2 7v4.2c0 1.1.6 2.1 1.6 2.6L5 20h3.2l.9-1.8h5.8l.9 1.8H19l-1.4-3.7c1-.5 1.6-1.5 1.6-2.6V9.5c0-4-3.1-7-7.2-7Z" />
             <path d="M8.7 9.8 10.3 11.4M10.3 9.8 8.7 11.4" />
@@ -71,7 +73,7 @@ const t = useTranslations(localeFromPath(pathname));
     </div>
   ) : (
     <header class={transparent ? "site-header overlaid" : "site-header"}>
-      <a class="brand" href="/">
+      <a class="brand" href={homeHref}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b026ff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 2.5c-4.1 0-7.2 3-7.2 7v4.2c0 1.1.6 2.1 1.6 2.6L5 20h3.2l.9-1.8h5.8l.9 1.8H19l-1.4-3.7c1-.5 1.6-1.5 1.6-2.6V9.5c0-4-3.1-7-7.2-7Z" />
           <path d="M8.7 9.8 10.3 11.4M10.3 9.8 8.7 11.4" />

@@ -1,5 +1,6 @@
 ---
 import "../../styles/base.css";
+import FontLinks from "../../components/FontLinks.astro";
 import HomeContent from "../../components/HomeContent.astro";
 import { useTranslations } from "../../i18n/ui";
 
@@ -13,12 +14,7 @@ const t = useTranslations("fr");
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>KillMutants — Tests de mutation pour .NET (Bientôt disponible)</title>
     <meta name="description" content={t("home.meta.description")} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Rubik+Wet+Paint&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
+    <FontLinks />
   </head>
   <body>
     <HomeContent />

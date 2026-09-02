@@ -3,3 +3,5 @@ dist/
 .astro/
 .wrangler/
 apps/web/src/generated/
+test-results/
+playwright-report/

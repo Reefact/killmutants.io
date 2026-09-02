@@ -14,9 +14,12 @@
     "check": "node scripts/generate-version.mjs && node scripts/generate-release-note.mjs && pnpm --filter @killmutants/web check",
     "serve": "wrangler dev",
     "preview": "wrangler versions upload",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "test:browser": "playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "serve": "^14.2.6",
     "typescript": "^5.9.3",
     "wrangler": "^4.127.0"
   }
