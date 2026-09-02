@@ -1,0 +1,157 @@
+---
+/**
+ * The explicit language control. Links inside a `<details>`, no JavaScript required:
+ * it works before hydration, with scripting disabled, and needs no stored preference to
+ * act on — the one thing this control must never do is redirect a reader automatically.
+ *
+ * A `<select>` needs script to navigate on change; a row of language links reads as N
+ * more destinations of equal weight once the header already carries a nav. `<details>`
+ * names the language the reader is *in* (the summary) and opens onto where else the page
+ * exists — never a locale it isn't translated into.
+ */
+import { localeFromPath, pathForLocale, translatedLocales } from "../i18n/routing";
+import { localeNames, localeTags, useTranslations, type Locale } from "../i18n/ui";
+
+interface Props {
+  pathname: string;
+}
+
+const { pathname } = Astro.props;
+
+const current: Locale = localeFromPath(pathname);
+const available: Locale[] = translatedLocales(pathname);
+const t = useTranslations(current);
+---
+
+{
+  available.length > 1 && (
+    <nav class="language-selector" aria-label={t("language.label")}>
+      <details>
+        <summary>
+          <span lang={localeTags[current]}>{localeNames[current]}</span>
+          <svg class="caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true" focusable="false">
+            <path d="M1 1l4 4 4-4" />
+          </svg>
+        </summary>
+
+        <ul>
+          {available.map((locale) => (
+            <li>
+              {locale === current ? (
+                <span aria-current="true" lang={localeTags[locale]}>
+                  {localeNames[locale]}
+                </span>
+              ) : (
+                <a href={pathForLocale(pathname, locale)} hreflang={localeTags[locale]} lang={localeTags[locale]}>
+                  <span class="visually-hidden">{t("language.switch")} </span>
+                  {localeNames[locale]}
+                </a>
+              )}
+            </li>
+          ))}
+        </ul>
+      </details>
+    </nav>
+  )
+}
+
+<script>
+  /**
+   * Closes the menu on an outside click or Escape. Additive: without it, the summary
+   * alone still opens and closes the panel, which is the whole of what it has to do.
+   */
+  const menus: HTMLDetailsElement[] = Array.from(document.querySelectorAll<HTMLDetailsElement>(".language-selector details"));
+
+  document.addEventListener("click", (event) => {
+    for (const menu of menus) {
+      if (menu.open && !menu.contains(event.target as Node)) {
+        menu.open = false;
+      }
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      for (const menu of menus) {
+        menu.open = false;
+      }
+    }
+  });
+</script>
+
+<style>
+  .language-selector {
+    position: relative;
+  }
+
+  .language-selector summary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .language-selector summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .language-selector .caret {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+  }
+
+  .language-selector[open] .caret,
+  .language-selector details[open] .caret {
+    transform: rotate(180deg);
+  }
+
+  .language-selector ul {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    margin: 0;
+    padding: 6px;
+    list-style: none;
+    background: var(--km-bg-panel);
+    border: 1px solid var(--km-border);
+    border-radius: 6px;
+    min-width: 120px;
+    z-index: 5;
+  }
+
+  .language-selector li a,
+  .language-selector li span {
+    display: block;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+
+  .language-selector li a {
+    color: var(--km-text-dim);
+  }
+
+  .language-selector li a:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--km-mutant-violet-bright);
+    text-shadow: none;
+  }
+
+  .language-selector li span[aria-current] {
+    color: var(--km-title);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

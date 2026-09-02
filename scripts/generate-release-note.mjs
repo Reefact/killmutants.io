@@ -1,15 +1,22 @@
-// Read this site's own newest release notes into apps/web/src/generated/site-release.json.
+// Read this site's own newest release notes, in both locales, into
+// apps/web/src/generated/site-release.json.
 //
-// WHAT IT READS is RELEASE_NOTES.md at the root of this repository — what changed on
-// killmutants.io, one section per `release/*` tag, written by hand before the tag that
-// names it is pushed. Only the newest RELEASED section, never `## Unreleased`: that
-// section is the drafting surface, and /version shows what shipped, not what will.
+// WHAT IT READS is RELEASE_NOTES-en.md and RELEASE_NOTES-fr.md at the root of this
+// repository — what changed on killmutants.io, one section per `release/*` tag, written
+// by hand before the tag that names it is pushed. Only the newest RELEASED section, never
+// `## Unreleased`: that section is the drafting surface, and /version shows what shipped.
+//
+// THE TWO FILES ARE ONE DOCUMENT IN TWO LANGUAGES, checked here: the newest release (and
+// each of the "previous" ones actually present) must name the same tag and carry the same
+// number of rubrics, each with the same number of bullets — a half-translated release
+// would otherwise render on /version with English and French silently out of step.
 //
 // UNLIKE justdummies.io's generator, THIS ONE DOES NOT REFUSE WHEN NOTHING HAS SHIPPED
 // YET. A brand-new site legitimately has zero releases, and refusing to build over that
 // would make this script impossible to introduce before the first tag exists. When no
-// released section is found, it writes { latest: null, previous: [] } instead, and the
-// /version page shows a "no releases yet" state.
+// released section is found (in either language), it writes
+// { latest: null, previous: [], moreTag: null } instead, and the /version page shows a
+// "no releases yet" state.
 //
 //   node scripts/generate-release-note.mjs
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
@@ -24,8 +31,12 @@ const destination = join(destinationDir, 'site-release.json');
 
 const REPOSITORY_URL = 'https://github.com/Reefact/killmutants.io';
 const SITE_ORIGIN = 'https://killmutants.io';
-const FILE = 'RELEASE_NOTES.md';
+const LOCALES = ['en', 'fr'];
 const PREVIOUS_COUNT = 5;
+
+function fileOf(locale) {
+  return `RELEASE_NOTES-${locale}.md`;
+}
 
 function refuse(message) {
   throw new Error(`generate-release-note: ${message}`);
@@ -34,37 +45,81 @@ function refuse(message) {
 const resolveLink = githubHrefResolver({ repositoryUrl: REPOSITORY_URL, siteOrigin: SITE_ORIGIN });
 const { releasesOf, isoDateOf } = releaseNotesReader({ refuse, resolveLink });
 
-const markdown = readFileSync(join(root, FILE), 'utf8');
-const releases = releasesOf(markdown, FILE, { skip: (heading) => heading === 'Unreleased' });
+const markdowns = Object.fromEntries(LOCALES.map((locale) => [locale, readFileSync(join(root, fileOf(locale)), 'utf8')]));
+
+const releases = Object.fromEntries(
+  LOCALES.map((locale) => [locale, releasesOf(markdowns[locale], fileOf(locale), { skip: (heading) => heading === 'Unreleased' })]),
+);
 
 mkdirSync(destinationDir, { recursive: true });
 
-if (releases.length === 0) {
+if (releases.en.length === 0 && releases.fr.length === 0) {
   writeFileSync(destination, JSON.stringify({ latest: null, previous: [], moreTag: null }, null, 2) + '\n');
   console.log('  apps/web/src/generated/site-release.json  (no releases yet)');
   process.exit(0);
 }
 
-const [latest, ...rest] = releases;
-const previous = rest.slice(0, PREVIOUS_COUNT);
+if (releases.en.length !== releases.fr.length) {
+  refuse(`${fileOf('en')} has ${releases.en.length} release(s) but ${fileOf('fr')} has ${releases.fr.length}`);
+}
 
-const document = {
-  latest: {
-    tag: latest.version,
-    date: isoDateOf(latest.date, FILE),
-    summaryHtml: latest.summaryHtml,
-    sections: latest.sections,
-  },
-  previous: previous.map((release) => ({
-    tag: release.version,
-    date: isoDateOf(release.date, FILE),
-    summaryHtml: release.summaryHtml,
-    sections: release.sections,
-  })),
-  /** The tag right past the last one shown, for the "view more on GitHub" link — null
-   *  once the file's whole history fits in latest + previous. */
-  moreTag: rest.length > PREVIOUS_COUNT ? rest[PREVIOUS_COUNT].version : null,
-};
+/** The two languages are one document in two spellings, joined by position — a rubric
+ *  count match is not enough, since a rubric with three bullets in English and one in
+ *  French would still pass it and then render a half-translated card. */
+function checkAgree(en, fr, index) {
+  if (fr.version !== en.version) {
+    refuse(`${fileOf('en')} names release #${index + 1} "${en.version}" but ${fileOf('fr')} names it "${fr.version}"`);
+  }
+  if (fr.sections.length !== en.sections.length) {
+    refuse(
+      `${fileOf('en')} and ${fileOf('fr')} disagree on ${en.version}: ${en.sections.length} rubric(s) against ${fr.sections.length}`,
+    );
+  }
+
+  en.sections.forEach((section, sectionIndex) => {
+    const twin = fr.sections[sectionIndex];
+
+    if (twin.items.length !== section.items.length) {
+      refuse(
+        `${fileOf('en')} and ${fileOf('fr')} disagree on ${en.version}, rubric ${sectionIndex + 1} ` +
+          `("${section.label}" against "${twin.label}"): ${section.items.length} bullet(s) against ${twin.items.length}`,
+      );
+    }
+  });
+}
+
+function releaseDocumentAt(index) {
+  const en = releases.en[index];
+  const fr = releases.fr[index];
+
+  checkAgree(en, fr, index);
+
+  return {
+    tag: en.version,
+    // One ISO date for both languages, read from the English file: the French twin
+    // spells the same day differently, which is a spelling and not a second fact.
+    date: isoDateOf(en.date, fileOf('en')),
+    locales: {
+      en: { summaryHtml: en.summaryHtml, sections: en.sections },
+      fr: { summaryHtml: fr.summaryHtml, sections: fr.sections },
+    },
+  };
+}
+
+const latest = releaseDocumentAt(0);
+const previousCount = Math.min(PREVIOUS_COUNT, releases.en.length - 1);
+const previous = Array.from({ length: previousCount }, (_unused, offset) => releaseDocumentAt(offset + 1));
+
+// The tag right past `previous`'s last entry, for the "view more on GitHub" link — null
+// once the files' whole history fits in latest + previous.
+const moreIndex = previousCount + 1;
+const moreTag = moreIndex < releases.en.length ? releases.en[moreIndex].version : null;
+
+if (moreTag !== null && releases.fr[moreIndex].version !== moreTag) {
+  refuse(`${fileOf('en')} names its release #${moreIndex + 1} "${moreTag}" but ${fileOf('fr')} names it "${releases.fr[moreIndex].version}"`);
+}
+
+const document = { latest, previous, moreTag };
 
 writeFileSync(destination, JSON.stringify(document, null, 2) + '\n');
-console.log(`  apps/web/src/generated/site-release.json  (latest: ${latest.version})`);
+console.log(`  apps/web/src/generated/site-release.json  (latest: ${latest.tag}, + ${previous.length} previous)`);

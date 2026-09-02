@@ -1,5 +1,7 @@
 # Release notes — killmutants.io
 
+🌍 🇬🇧 English (this file) · 🇫🇷 [Français](RELEASE_NOTES-fr.md)
+
 What changed on killmutants.io, one section per `release/*` tag, in plain language. This is
 not a commit log: it says what a reader would notice. The technical record is the
 repository's own history.
@@ -15,3 +17,4 @@ repository's own history.
   page), a link to the tool's GitHub repository, and a language selector.
 - Added a `/version` page, showing what this deployment is (release, commit, build time)
   and what the site last shipped — this changelog, in other words.
+- The site is now available in French, at `/fr/`.
