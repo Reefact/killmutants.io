@@ -1,5 +1,6 @@
 ---
 import "../styles/base.css";
+import Header from "../components/Header.astro";
 
 const GITHUB_URL = "https://github.com/Reefact/kill-mutants";
 ---
@@ -39,6 +40,8 @@ const GITHUB_URL = "https://github.com/Reefact/kill-mutants";
         >
         </div>
         <div class="grime" style="z-index: 2;"></div>
+
+        <Header />
 
         <div style="position: relative; z-index: 3; display: flex; align-items: center; gap: 12px;">
           <svg

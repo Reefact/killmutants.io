@@ -1,0 +1,132 @@
+---
+/**
+ * The bar every page carries: the brand (always links home), then whatever other
+ * content pages exist (none yet — they go here, always to the left of GitHub), then
+ * GitHub, then the language selector. No "Home" link (the brand already is one) and
+ * no link back to the current page.
+ *
+ * `transparent` (default) overlays the bar on a hero image with no background of its
+ * own, text shadowed for legibility over whatever the image shows there. A page with
+ * no hero would set it to false for a solid bar instead — no page needs that yet.
+ */
+import { site } from "../site";
+
+interface Props {
+  transparent?: boolean;
+}
+
+const { transparent = true } = Astro.props;
+---
+
+<header class={transparent ? "site-header transparent" : "site-header"}>
+  <a class="brand" href="/">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#b026ff"
+      stroke-width="1.7"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path
+        d="M12 2.5c-4.1 0-7.2 3-7.2 7v4.2c0 1.1.6 2.1 1.6 2.6L5 20h3.2l.9-1.8h5.8l.9 1.8H19l-1.4-3.7c1-.5 1.6-1.5 1.6-2.6V9.5c0-4-3.1-7-7.2-7Z"
+      ></path>
+      <path d="M8.7 9.8 10.3 11.4M10.3 9.8 8.7 11.4"></path>
+      <path d="M15.3 9.8 13.7 11.4M13.7 9.8 15.3 11.4"></path>
+    </svg>
+    KILLMUTANTS
+  </a>
+
+  <nav aria-label="Primary">
+    <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
+    <a href={site.repository} target="_blank" rel="noopener noreferrer">GitHub</a>
+    <span class="nav-divider" aria-hidden="true"></span>
+    <div class="language-selector" aria-label="Language">
+      <span lang="en">English</span>
+      <svg class="caret" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true" focusable="false">
+        <path d="M1 1l4 4 4-4"></path>
+      </svg>
+    </div>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    font-family: var(--km-font-mono);
+  }
+
+  .site-header:not(.transparent) {
+    background: var(--km-bg-panel);
+    border-bottom: 1px solid var(--km-border);
+  }
+
+  .site-header.transparent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .site-header.transparent .brand,
+  .site-header.transparent nav {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 3px 14px rgba(0, 0, 0, 0.75);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+    color: var(--km-title) !important;
+  }
+
+  .brand:hover {
+    color: var(--km-title) !important;
+    text-shadow: 0 0 16px rgba(176, 38, 255, 0.5);
+  }
+
+  .site-header.transparent .brand:hover {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 3px 14px rgba(0, 0, 0, 0.75), 0 0 16px rgba(176, 38, 255, 0.5);
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-size: 13px;
+  }
+
+  nav a {
+    color: var(--km-text-dim);
+  }
+
+  .nav-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--km-border);
+  }
+
+  .language-selector {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--km-text-dim);
+    cursor: pointer;
+  }
+
+  .language-selector .caret {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+  }
+</style>

@@ -1,5 +1,6 @@
 ---
 import "../styles/base.css";
+import Header from "../components/Header.astro";
 import ReleaseCard from "../components/ReleaseCard.astro";
 import { commitUrl, version } from "../version";
 import { releaseUrl, releasesListUrl, siteRelease } from "../site-release";
@@ -16,11 +17,34 @@ const NOTHING = "#null";
     <meta name="description" content="What this deployment of killmutants.io is, and what it last shipped." />
   </head>
   <body>
-    <main style="max-width: 720px; margin: 0 auto; padding: 64px 24px 96px; display: flex; flex-direction: column; gap: 12px;">
-      <a href="/" class="footer-link" style="align-self: flex-start;">&larr; killmutants.io</a>
+    <div style="position: relative; height: 300px; overflow: hidden;">
+      <img
+        src="/images/version-hero.jpg"
+        alt=""
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: left center; opacity: 0.75;"
+      />
+      <div
+        style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(13,12,10,0.35) 0%, rgba(13,12,10,0.35) 100%), linear-gradient(0deg, #0d0c0a 0%, rgba(13,12,10,0) 45%, rgba(13,12,10,0) 70%, rgba(13,12,10,0.5) 100%);"
+      >
+      </div>
 
-      <section style="margin-top: 24px;">
-        <h1 style="font-family: var(--km-font-body); font-size: 22px; color: var(--km-title); margin: 0;">This build</h1>
+      <Header />
+
+      <div style="position: absolute; left: 40px; bottom: 28px; z-index: 2;">
+        <h1
+          style="font-family: var(--km-font-mono); font-size: 30px; font-weight: 500; color: var(--km-title); margin: 0; text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 4px 20px rgba(0,0,0,0.9);"
+        >
+          Version
+        </h1>
+        <div class="eyebrow" style="margin-top: 4px; text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 4px 16px rgba(0,0,0,0.85);">
+          Build &amp; release info
+        </div>
+      </div>
+    </div>
+
+    <main style="max-width: 720px; margin: 0 auto; padding: 56px 24px 96px; display: flex; flex-direction: column; gap: 12px;">
+      <section>
+        <h2 style="font-family: var(--km-font-body); font-size: 22px; color: var(--km-title); margin: 0;">This build</h2>
         <p style="color: var(--km-text-muted); margin: 8px 0 24px;">What this deployment of killmutants.io is.</p>
 
         <table style="width: 100%; border: 1px solid var(--km-border); border-radius: 6px; border-collapse: separate; background: var(--km-bg-panel); text-align: left;">
