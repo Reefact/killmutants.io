@@ -56,14 +56,15 @@ const homeHref = pathForLocale("/", locale);
           KILLMUTANTS
         </a>
 
+        <LanguageSelector pathname={pathname} />
+        <span class="nav-divider" aria-hidden="true" />
+
         <nav class="nav-links" aria-label={t("nav.primary")}>
           <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
           <a href={site.repository} target="_blank" rel="noopener noreferrer">
             {t("nav.github")}
           </a>
         </nav>
-        <span class="nav-divider" aria-hidden="true" />
-        <LanguageSelector pathname={pathname} />
       </header>
 
       <div class="banner-title">
@@ -82,14 +83,15 @@ const homeHref = pathForLocale("/", locale);
         KILLMUTANTS
       </a>
 
+      <LanguageSelector pathname={pathname} />
+      <span class="nav-divider" aria-hidden="true" />
+
       <nav class="nav-links" aria-label={t("nav.primary")}>
         <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
         <a href={site.repository} target="_blank" rel="noopener noreferrer">
           {t("nav.github")}
         </a>
       </nav>
-      <span class="nav-divider" aria-hidden="true" />
-      <LanguageSelector pathname={pathname} />
     </header>
   )
 }
@@ -170,7 +172,12 @@ const homeHref = pathForLocale("/", locale);
     text-shadow: var(--overlaidShadow);
   }
 
+  /* Source order is brand, language selector, divider, nav-links — that's the
+   * order keyboard/AT users tab through, matching the mobile layout below. On
+   * wider screens `order` restores the traditional visual arrangement (GitHub
+   * before the language selector) without touching tab order. */
   .brand {
+    order: 1;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -192,9 +199,12 @@ const homeHref = pathForLocale("/", locale);
     text-shadow: 0 0 16px rgba(176, 38, 255, 0.5);
   }
 
-  /* Pushed to the right of the brand; the divider and language selector that
-   * follow it in source order sit right next to it (no space-between needed). */
+  .site-header :global(.language-selector) {
+    order: 4;
+  }
+
   .nav-links {
+    order: 2;
     display: flex;
     align-items: center;
     gap: 24px;
@@ -221,6 +231,7 @@ const homeHref = pathForLocale("/", locale);
   }
 
   .nav-divider {
+    order: 3;
     width: 1px;
     height: 16px;
     background: var(--km-border);
@@ -250,6 +261,7 @@ const homeHref = pathForLocale("/", locale);
     }
 
     .site-header :global(.language-selector) {
+      order: 2;
       margin-left: auto;
     }
   }
