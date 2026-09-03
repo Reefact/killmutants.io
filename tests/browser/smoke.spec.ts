@@ -27,8 +27,11 @@ for (const { locale, home, version } of PAGES) {
       await expect(page).toHaveURL(new URL(home, page.url()).toString());
     });
 
-    test("the GitHub link leaves the site in a new tab", async ({ page }) => {
-      await page.goto(home);
+    test("the header's GitHub link leaves the site in a new tab", async ({ page }) => {
+      // /version, not home: the home page hides the header's GitHub link
+      // (`githubLink={false}`) since it already has its own "Star on GitHub"
+      // button — see the next test.
+      await page.goto(version);
       // Desktop viewport (the default here): the desktop copy of the nav is the
       // one in the accessibility tree — see Header.astro's top-of-file comment
       // on why the header carries two copies (`.nav-desktop`/`.nav-mobile`).
@@ -36,6 +39,18 @@ for (const { locale, home, version } of PAGES) {
       await expect(github).toHaveAttribute("target", "_blank");
       await expect(github).toHaveAttribute("rel", /noopener/);
       await expect(github).toHaveAttribute("href", "https://github.com/Reefact/kill-mutants");
+    });
+
+    test("the home page's header has no GitHub link, only the hero's CTA button", async ({ page }) => {
+      await page.goto(home);
+      // `.nav-links` is the header's own GitHub-link block — distinct from
+      // `.language-selector`, which is also a <nav> and stays either way.
+      await expect(page.locator("header .nav-links")).toHaveCount(0);
+
+      const cta = page.locator(".btn-primary");
+      await expect(cta).toHaveAttribute("target", "_blank");
+      await expect(cta).toHaveAttribute("rel", /noopener/);
+      await expect(cta).toHaveAttribute("href", "https://github.com/Reefact/kill-mutants");
     });
 
     test("the language selector stays reachable at a narrow (320px) viewport", async ({ page }) => {

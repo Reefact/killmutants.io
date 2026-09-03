@@ -34,6 +34,10 @@
  *   building its own hero underneath it (only the home page does this today, since
  *   its hero is the page's primary content — full-height, not a decorative strip —
  *   and doesn't fit this component's fixed banner shape).
+ *
+ * `githubLink` (default true) drops the header's own GitHub link when a page
+ * already carries a more prominent one of its own — the home page's "Star on
+ * GitHub" button — so the same destination isn't offered twice.
  */
 import LanguageSelector from "./LanguageSelector.astro";
 import { localeFromPath, pathForLocale } from "../i18n/routing";
@@ -49,9 +53,10 @@ interface Banner {
 interface Props {
   transparent?: boolean;
   banner?: Banner;
+  githubLink?: boolean;
 }
 
-const { transparent = true, banner } = Astro.props;
+const { transparent = true, banner, githubLink = true } = Astro.props;
 
 const pathname = Astro.url.pathname;
 const locale = localeFromPath(pathname);
@@ -77,22 +82,28 @@ const homeHref = pathForLocale("/", locale);
 
         <div class="nav-mobile">
           <LanguageSelector pathname={pathname} />
-          <nav class="nav-links" aria-label={t("nav.primary")}>
-            <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
-            <a href={site.repository} target="_blank" rel="noopener noreferrer">
-              {t("nav.github")}
-            </a>
-          </nav>
+          {githubLink && (
+            <nav class="nav-links" aria-label={t("nav.primary")}>
+              <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
+              <a href={site.repository} target="_blank" rel="noopener noreferrer">
+                {t("nav.github")}
+              </a>
+            </nav>
+          )}
         </div>
 
         <div class="nav-desktop">
-          <nav class="nav-links" aria-label={t("nav.primary")}>
-            <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
-            <a href={site.repository} target="_blank" rel="noopener noreferrer">
-              {t("nav.github")}
-            </a>
-          </nav>
-          <span class="nav-divider" aria-hidden="true" />
+          {githubLink && (
+            <>
+              <nav class="nav-links" aria-label={t("nav.primary")}>
+                <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
+                <a href={site.repository} target="_blank" rel="noopener noreferrer">
+                  {t("nav.github")}
+                </a>
+              </nav>
+              <span class="nav-divider" aria-hidden="true" />
+            </>
+          )}
           <LanguageSelector pathname={pathname} />
         </div>
       </header>
@@ -115,22 +126,28 @@ const homeHref = pathForLocale("/", locale);
 
       <div class="nav-mobile">
         <LanguageSelector pathname={pathname} />
-        <nav class="nav-links" aria-label={t("nav.primary")}>
-          <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
-          <a href={site.repository} target="_blank" rel="noopener noreferrer">
-            {t("nav.github")}
-          </a>
-        </nav>
+        {githubLink && (
+          <nav class="nav-links" aria-label={t("nav.primary")}>
+            <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
+            <a href={site.repository} target="_blank" rel="noopener noreferrer">
+              {t("nav.github")}
+            </a>
+          </nav>
+        )}
       </div>
 
       <div class="nav-desktop">
-        <nav class="nav-links" aria-label={t("nav.primary")}>
-          <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
-          <a href={site.repository} target="_blank" rel="noopener noreferrer">
-            {t("nav.github")}
-          </a>
-        </nav>
-        <span class="nav-divider" aria-hidden="true" />
+        {githubLink && (
+          <>
+            <nav class="nav-links" aria-label={t("nav.primary")}>
+              <!-- Other content pages (Docs, etc.) go here, always to the left of GitHub. None exist yet. -->
+              <a href={site.repository} target="_blank" rel="noopener noreferrer">
+                {t("nav.github")}
+              </a>
+            </nav>
+            <span class="nav-divider" aria-hidden="true" />
+          </>
+        )}
         <LanguageSelector pathname={pathname} />
       </div>
     </header>
@@ -260,8 +277,12 @@ const homeHref = pathForLocale("/", locale);
 
   /* Each copy pushes the first element of its own group to the right of the
    * brand, so the rest of that group (divider + language selector on desktop;
-   * nothing after it on mobile) trails along right next to it. */
-  .nav-desktop .nav-links {
+   * nothing after it on mobile) trails along right next to it. When a page
+   * hides the GitHub link (`githubLink={false}`), the language selector is
+   * `.nav-desktop`'s only child — hence :first-child — so it needs the push
+   * itself instead of trailing after the now-absent nav-links. */
+  .nav-desktop .nav-links,
+  .nav-desktop :global(.language-selector):first-child {
     margin-left: auto;
   }
 
