@@ -8,6 +8,11 @@ technique, c'est celui du dépôt lui-même.
 
 ## Unreleased
 
+## release/2026-09-03T15-59-11Z — 3 septembre 2026
+
+Le site demande désormais aux moteurs de recherche de ne pas l'indexer tant qu'il est en
+mode « Bientôt disponible ».
+
 ## release/2026-09-03T09-40-33Z — 3 septembre 2026
 
 ### 🙌 Améliorations
