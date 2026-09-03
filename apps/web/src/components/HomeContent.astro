@@ -28,28 +28,8 @@ const t = useTranslations(localeFromPath(Astro.url.pathname));
 
     <Header githubLink={false} />
 
-    <div style="position: relative; z-index: 3; display: flex; align-items: center; gap: 12px;">
-      <svg
-        class="eyebrow-icon"
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#b026ff"
-        stroke-width="1.7"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        style="filter: drop-shadow(0 1px 3px rgba(0,0,0,0.95)) drop-shadow(0 4px 16px rgba(0,0,0,0.85));"
-      >
-        <path
-          d="M12 2.5c-4.1 0-7.2 3-7.2 7v4.2c0 1.1.6 2.1 1.6 2.6L5 20h3.2l.9-1.8h5.8l.9 1.8H19l-1.4-3.7c1-.5 1.6-1.5 1.6-2.6V9.5c0-4-3.1-7-7.2-7Z"
-        ></path>
-        <path d="M8.7 9.8 10.3 11.4M10.3 9.8 8.7 11.4"></path>
-        <path d="M15.3 9.8 13.7 11.4M13.7 9.8 15.3 11.4"></path>
-      </svg>
-      <div class="eyebrow" style="text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 4px 20px rgba(0,0,0,0.9);">
-        {t("home.eyebrow")}
-      </div>
+    <div class="eyebrow" style="position: relative; z-index: 3; text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 4px 20px rgba(0,0,0,0.9);">
+      {t("home.eyebrow")}
     </div>
 
     <h1
@@ -123,17 +103,11 @@ const t = useTranslations(localeFromPath(Astro.url.pathname));
    * viewport, and plain `center` would center straight through the header
    * instead of stopping. `safe center` falls back to flex-start once that
    * happens, so raise padding-top here to the header's own height plus a gap,
-   * keeping that fallback (and every size below it) clear of the header. Drop
-   * the eyebrow icon in the same range so the row stays uncluttered right
-   * where space is getting tight, not just once the header wraps at 480px. */
+   * keeping that fallback (and every size below it) clear of the header. */
   @media (max-width: 1050px) {
     .hero {
       padding-top: 78px !important;
       justify-content: safe center !important;
-    }
-
-    .eyebrow-icon {
-      display: none;
     }
   }
 
@@ -142,13 +116,6 @@ const t = useTranslations(localeFromPath(Astro.url.pathname));
   @media (max-width: 480px) {
     .hero {
       padding-top: 96px !important;
-    }
-
-    /* Redundant with the header's own brand icon once the header wraps below
-     * the hero eyebrow on mobile (see Header.astro) — drop it there and let
-     * the eyebrow text alone stay centered. */
-    .eyebrow-icon {
-      display: none;
     }
   }
 </style>
