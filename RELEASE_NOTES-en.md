@@ -8,6 +8,20 @@ repository's own history.
 
 ## Unreleased
 
+## release/2026-09-03T09-40-33Z — September 3, 2026
+
+### 🙌 Improvements
+
+- The home page header no longer shows a second GitHub link — the hero already has its own
+  prominent "Star on GitHub" button pointing at the same place.
+
+### 🐛 Fixes
+
+- Restored the header's original GitHub-before-language order on desktop, after the previous
+  release's mobile tab-order fix had changed it there too as a side effect.
+- Fixed the hero tagline ("Mutation testing for .NET · Coming soon") crowding against the
+  header on medium-width browser windows, and dropped its icon.
+
 ## release/2026-09-03T06-48-42Z — September 3, 2026
 
 ### 🐛 Fixes

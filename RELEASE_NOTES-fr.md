@@ -8,6 +8,22 @@ technique, c'est celui du dépôt lui-même.
 
 ## Unreleased
 
+## release/2026-09-03T09-40-33Z — 3 septembre 2026
+
+### 🙌 Améliorations
+
+- L'en-tête de la page d'accueil n'affiche plus un second lien GitHub — le hero a déjà son
+  propre bouton bien visible « Star on GitHub » qui pointe vers la même page.
+
+### 🐛 Corrections
+
+- Restauration de l'ordre d'origine GitHub-avant-langue de l'en-tête sur ordinateur, après que
+  la correction de l'ordre de tabulation mobile de la version précédente l'avait aussi changé
+  là par effet de bord.
+- Correction de l'accroche du hero (« Mutation testing for .NET · Coming soon ») qui se
+  retrouvait collée à l'en-tête sur les fenêtres de largeur moyenne, et suppression de son
+  icône.
+
 ## release/2026-09-03T06-48-42Z — 3 septembre 2026
 
 ### 🐛 Corrections
