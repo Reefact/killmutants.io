@@ -115,23 +115,23 @@ const t = useTranslations(localeFromPath(Astro.url.pathname));
 <style>
   /* Header is `overlaid` (position: absolute) here, so it takes no space in the
    * hero's own flex layout — its vertically-centered content isn't aware of the
-   * header's height. When the hero content is too tall for the viewport (a
-   * narrower window wraps the description onto more lines, or shrinks the
-   * clamp()'d h1 less than expected), plain `center` centers straight through
-   * the header instead of stopping — `safe center` falls back to flex-start
-   * once that happens, so we also raise padding-top here to the header's own
-   * height plus a gap, keeping that fallback (and every size below it) clear
-   * of the header instead of merely reducing the overlap. */
-  .hero {
-    padding-top: 78px !important;
-    justify-content: safe center !important;
-  }
-
-  /* Below the h1's own clamp() breakpoint (8vw = 84px at 1050px) the title
-   * is already shrinking and the eyebrow row sits close under the header —
-   * drop its icon there too so the row stays uncluttered right where space
-   * is getting tight, not just once the header wraps at 480px. */
+   * header's height. Above this breakpoint the content is short enough to
+   * center with room to spare, so the original padding/centering is left
+   * untouched there. Below it (the h1's own clamp() breakpoint — 8vw = 84px
+   * at 1050px — where the title starts shrinking and the description is more
+   * likely to wrap onto an extra line), the content can grow taller than the
+   * viewport, and plain `center` would center straight through the header
+   * instead of stopping. `safe center` falls back to flex-start once that
+   * happens, so raise padding-top here to the header's own height plus a gap,
+   * keeping that fallback (and every size below it) clear of the header. Drop
+   * the eyebrow icon in the same range so the row stays uncluttered right
+   * where space is getting tight, not just once the header wraps at 480px. */
   @media (max-width: 1050px) {
+    .hero {
+      padding-top: 78px !important;
+      justify-content: safe center !important;
+    }
+
     .eyebrow-icon {
       display: none;
     }
