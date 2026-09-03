@@ -8,6 +8,20 @@ technique, c'est celui du dépôt lui-même.
 
 ## Unreleased
 
+## release/2026-09-03T06-48-42Z — 3 septembre 2026
+
+### 🐛 Corrections
+
+- Correction de l'en-tête sur les petits écrans de téléphone, où l'accroche du hero
+  (« Mutation testing for .NET · Coming soon ») pouvait chevaucher la barre de navigation
+  au-dessus.
+- Sur les téléphones étroits, GitHub occupe désormais sa propre ligne centrée sous le
+  sélecteur de langue, au lieu d'être serré sur la même ligne que le logo KillMutants.
+- Correction d'un problème de navigation au clavier où la tabulation dans l'en-tête ne
+  suivait pas l'ordre d'affichage à l'écran.
+- Les liens de l'en-tête (GitHub, le sélecteur de langue) ont désormais le même effet de
+  survol violet que tous les autres liens du site.
+
 ## release/2026-09-02T02-51-56Z — 2 septembre 2026
 
 ### ✨ Nouveautés
