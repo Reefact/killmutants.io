@@ -8,6 +8,19 @@ repository's own history.
 
 ## Unreleased
 
+## release/2026-09-03T06-48-42Z — September 3, 2026
+
+### 🐛 Fixes
+
+- Fixed the header on short mobile screens, where the hero tagline ("Mutation testing for
+  .NET · Coming soon") could overlap the navigation bar above it.
+- On narrow phones, GitHub now sits on its own centered row below the language selector,
+  instead of both being squeezed onto the same line as the KillMutants mark.
+- Fixed a keyboard-navigation issue where tabbing through the header didn't follow the
+  order things appear on screen.
+- Header links (GitHub, the language selector) now get the same violet glow on hover as
+  every other link on the site.
+
 ## release/2026-09-02T02-51-56Z — September 2, 2026
 
 ### ✨ New
