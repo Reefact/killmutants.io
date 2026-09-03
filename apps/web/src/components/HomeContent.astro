@@ -115,10 +115,30 @@ const t = useTranslations(localeFromPath(Astro.url.pathname));
 <style>
   /* Header is `overlaid` (position: absolute) here, so it takes no space in the
    * hero's own flex layout — its vertically-centered content isn't aware of the
-   * header's height. Below 480px the header's nav wraps to a second row (see
-   * Header.astro), tall enough that the centered eyebrow can render underneath
-   * it. Force enough top padding to clear the wrapped header at that breakpoint;
-   * wider viewports keep the original padding untouched. */
+   * header's height. When the hero content is too tall for the viewport (a
+   * narrower window wraps the description onto more lines, or shrinks the
+   * clamp()'d h1 less than expected), plain `center` centers straight through
+   * the header instead of stopping — `safe center` falls back to flex-start
+   * once that happens, so we also raise padding-top here to the header's own
+   * height plus a gap, keeping that fallback (and every size below it) clear
+   * of the header instead of merely reducing the overlap. */
+  .hero {
+    padding-top: 78px !important;
+    justify-content: safe center !important;
+  }
+
+  /* Below the h1's own clamp() breakpoint (8vw = 84px at 1050px) the title
+   * is already shrinking and the eyebrow row sits close under the header —
+   * drop its icon there too so the row stays uncluttered right where space
+   * is getting tight, not just once the header wraps at 480px. */
+  @media (max-width: 1050px) {
+    .eyebrow-icon {
+      display: none;
+    }
+  }
+
+  /* Below 480px the header's nav wraps to a second row (see Header.astro),
+   * taller still — force enough top padding to clear that taller header too. */
   @media (max-width: 480px) {
     .hero {
       padding-top: 96px !important;
