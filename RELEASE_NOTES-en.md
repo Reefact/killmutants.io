@@ -8,6 +8,10 @@ repository's own history.
 
 ## Unreleased
 
+## release/2026-09-03T15-59-11Z — September 3, 2026
+
+The site now asks search engines not to index it while it's still in "Coming Soon" mode.
+
 ## release/2026-09-03T09-40-33Z — September 3, 2026
 
 ### 🙌 Improvements
