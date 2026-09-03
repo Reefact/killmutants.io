@@ -1,0 +1,5 @@
+# Désindexation temporaire : le site est encore en mode "Coming Soon".
+# À retirer (ou remplacer par une règle plus permissive) une fois le site prêt
+# à être référencé.
+User-agent: *
+Disallow: /
