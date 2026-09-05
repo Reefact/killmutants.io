@@ -79,6 +79,26 @@ test("a narrow window is sized for what `cover` paints, not for its own width", 
   expect(askedFor).toBeGreaterThan(375);
 });
 
+test("the home hero keeps up with a window tall enough to stretch it", async ({ page }) => {
+  // The hero is `flex: 1` in a `min-height: 100vh` column, so it absorbs the
+  // height the rest of the page leaves — it does not stop at some figure
+  // measured once on a laptop. A tall window stretches it to 1220px and more,
+  // and `cover` then paints the artwork wider than 2800px. This is the case a
+  // fixed `boxHeight` got wrong while every ordinary viewport still looked
+  // right, so it is the one worth pinning down.
+  await page.setViewportSize({ width: 500, height: 2000 });
+  await page.goto("/");
+
+  const { askedFor } = await resolved(page);
+  const painted = await page.evaluate(() => {
+    const img = document.querySelector<HTMLImageElement>("picture.hero-bg img")!;
+    const box = img.getBoundingClientRect();
+    return Math.max(box.width, (box.height * img.naturalWidth) / img.naturalHeight);
+  });
+
+  expect(askedFor).toBeGreaterThanOrEqual(painted);
+});
+
 test("a modest window is not force-fed the largest variant", async ({ page }) => {
   // The other half of the same bargain: the width ladder exists so a small
   // window pays for a small file. (The /version banner is the honest place to
