@@ -3,8 +3,12 @@ import { fileURLToPath } from 'node:url';
 
 import { defineConfig } from 'astro/config';
 
+import dropUnreferencedAssets from './integrations/drop-unreferenced-assets.mjs';
+
 export default defineConfig({
   site: 'https://killmutants.io',
+
+  integrations: [dropUnreferencedAssets()],
 
   i18n: {
     defaultLocale: 'en',
