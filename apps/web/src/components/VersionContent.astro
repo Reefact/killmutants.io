@@ -1,6 +1,7 @@
 ---
 import Header from "./Header.astro";
 import ReleaseCard from "./ReleaseCard.astro";
+import versionHero from "@brand/version.png";
 import { localeFromPath } from "../i18n/routing";
 import { useTranslations } from "../i18n/ui";
 import { commitUrl, version } from "../version";
@@ -16,7 +17,7 @@ const previous = previousSiteReleasesIn(locale);
 
 <Header
   banner={{
-    image: "/images/version-hero.jpg",
+    image: versionHero,
     title: t("version.title"),
     subtitle: t("version.subtitle"),
   }}

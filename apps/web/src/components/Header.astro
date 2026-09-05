@@ -39,13 +39,17 @@
  * already carries a more prominent one of its own — the home page's "Star on
  * GitHub" button — so the same destination isn't offered twice.
  */
+import HeroBackground from "./HeroBackground.astro";
 import LanguageSelector from "./LanguageSelector.astro";
 import { localeFromPath, pathForLocale } from "../i18n/routing";
 import { useTranslations } from "../i18n/ui";
 import { site } from "../site";
 
 interface Banner {
-  image: string;
+  /** The brand original, imported (e.g. `import hero from "@brand/version.png"`),
+   *  not a URL: importing it is what puts it through `astro:assets`, so the
+   *  banner gets a whole ladder of sizes and formats instead of one fixed file. */
+  image: ImageMetadata;
   title: string;
   subtitle: string;
 }
@@ -67,7 +71,10 @@ const homeHref = pathForLocale("/", locale);
 {
   banner ? (
     <div class="hero-banner">
-      <img src={banner.image} alt="" />
+      {/* `300px` — `.hero-banner`'s own fixed height below; see
+          HeroBackground.astro on why that height is what decides how wide the
+          artwork actually gets painted. */}
+      <HeroBackground image={banner.image} boxHeight="300px" objectPosition="left center" opacity={0.75} />
       <div class="fade" />
 
       <header class="site-header overlaid">
@@ -159,17 +166,6 @@ const homeHref = pathForLocale("/", locale);
     position: relative;
     height: 300px;
     overflow: hidden;
-  }
-
-  .hero-banner img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: left center;
-    opacity: 0.75;
   }
 
   .hero-banner .fade {

@@ -1,0 +1,70 @@
+---
+/**
+ * The full-bleed artwork behind a hero (the home page) or a page banner
+ * (/version): the brand original, re-encoded at build time into a ladder of
+ * widths and formats, so a browser downloads the one variant that matches its
+ * own viewport and pixel density instead of the single fixed-width JPEG both
+ * places used to hard-code.
+ *
+ * ## Why `boxHeight`, and not just `sizes="100vw"`
+ *
+ * Both call sites paint the artwork with `object-fit: cover` across a box as
+ * wide as the viewport — so the obvious `sizes="100vw"` looks right and is
+ * wrong. `cover` scales until *both* axes are filled, i.e. by whichever one
+ * runs out first, so the width the artwork is actually painted at is
+ *
+ *     max(100vw, boxHeight × the artwork's own aspect ratio)
+ *
+ * and on any screen proportionally taller than the artwork the second term
+ * wins, by a lot: a 2560×1440 screen paints this 1916×821 banner 3361px wide,
+ * not 2560. `sizes="100vw"` would under-ask by a third there and hand a big
+ * screen a variant it then has to enlarge — the very thing this component
+ * exists to stop. Hence the caller states the box's height and the `sizes`
+ * below states the real arithmetic. (A browser too old to parse `max()` in
+ * `sizes` drops it and falls back to `100vw`, which is exactly the old
+ * behaviour: worse, never broken.)
+ *
+ * `loading="eager"` and `fetchpriority="high"` because this artwork is the
+ * largest thing above the fold on both pages — the LCP element itself.
+ * `<Picture>` defaults to `lazy`, which holds an image back until layout has
+ * run: right for a thumbnail far down a page, exactly wrong for this one.
+ */
+import { Picture } from "astro:assets";
+
+interface Props {
+  /** The brand original, imported (e.g. `import banner from "@brand/banner.png"`). */
+  image: ImageMetadata;
+  /** CSS height of the box the artwork covers; its width is always the viewport's. */
+  boxHeight: string;
+  /** `object-position` — which part of the artwork survives `cover`'s crop. */
+  objectPosition?: string;
+  /** How far the artwork is faded back behind the text laid over it. */
+  opacity: number;
+}
+
+const { image, boxHeight, objectPosition = "center", opacity } = Astro.props;
+
+/**
+ * Stops at the original's own width: past that there is no more detail to
+ * serve, only bytes. The ladder reaches well beyond today's artwork on purpose
+ * — re-export a brand original at 3840px and the larger rungs light up on
+ * their own, with nothing here to change.
+ */
+const WIDTH_LADDER = [640, 960, 1280, 1600, 1920, 2560, 3200, 3840];
+const widths = [...WIDTH_LADDER.filter((width) => width < image.width), image.width];
+
+const sizes = `max(100vw, calc(${boxHeight} * ${image.width} / ${image.height}))`;
+---
+
+<Picture
+  src={image}
+  widths={widths}
+  sizes={sizes}
+  formats={["avif", "webp"]}
+  fallbackFormat="jpeg"
+  alt=""
+  loading="eager"
+  fetchpriority="high"
+  pictureAttributes={{ class: "hero-bg" }}
+  style={`object-position: ${objectPosition}; opacity: ${opacity};`}
+/>
