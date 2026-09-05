@@ -1,0 +1,115 @@
+---
+/**
+ * The full-bleed artwork behind a hero (the home page) or a page banner
+ * (/version): the brand original, re-encoded at build time into a ladder of
+ * widths and formats, so a browser downloads the one variant that matches its
+ * own viewport and pixel density instead of the single fixed-width JPEG both
+ * places used to hard-code.
+ *
+ * ## Why `boxHeight`, and not just `sizes="100vw"`
+ *
+ * Both call sites paint the artwork with `object-fit: cover` across a box as
+ * wide as the viewport — so the obvious `sizes="100vw"` looks right and is
+ * only half right. `cover` scales until *both* axes are filled, i.e. by
+ * whichever one runs out first, so the width the artwork is actually painted
+ * at is
+ *
+ *     max(100vw, boxHeight × the artwork's own aspect ratio)
+ *
+ * Whenever the box is proportionally *wider* than the artwork the first term
+ * wins and `100vw` is exact — which on a wide desktop is the usual case. It is
+ * the narrow window that breaks it: the /version banner is 300px tall against
+ * a 1774x887 original, so a 375px-wide phone paints it 600px wide, not 375,
+ * and `sizes="100vw"` would under-ask by 60% and hand it a variant it then has
+ * to enlarge. Hence the caller states the box's height and the `sizes` below
+ * states the real arithmetic.
+ *
+ * `boxHeight` is the height the box can actually reach, which is not always a
+ * number CSS states outright — the home hero's grows with the window (see its
+ * call site). Over-stating it only costs bytes; under-stating it hands back a
+ * variant too small, which is the whole bug this component exists to prevent,
+ * so it is stated as a bound and never as a measurement.
+ *
+ * ## Why the `sizes` below looks the way it does
+ *
+ * `max(100vw, …)` says all of this in one expression, and WebKit did not
+ * accept `min()`/`max()`/`clamp()` in `sizes` until Safari 26.4 — where it is
+ * dropped, `sizes` silently falls back to `100vw`, losing exactly the cover
+ * width this is here to state. So the same arithmetic is spelled out as a
+ * media condition and a plain length instead, which every browser in range has
+ * parsed for a decade: ask whether the viewport is already wider than the
+ * artwork gets painted, and answer `100vw` if it is and that painted width if
+ * it is not.
+ *
+ * One residue is left on purpose: a box stated in `vh` is bounded by the
+ * viewport, so on a screen small enough that the box's own content overflows
+ * it — 320x568, where the home hero runs 596px tall — the answer is ~5% under
+ * the truth. Raising the bound to cover that would over-state it on every
+ * other screen, and 5% is a fraction of the gap between two rungs of the
+ * ladder, so it selects the same variant either way.
+ *
+ * `loading="eager"` and `fetchpriority="high"` because this artwork is the
+ * largest thing above the fold on both pages — the LCP element itself.
+ * `<Picture>` defaults to `lazy`, which holds an image back until layout has
+ * run: right for a thumbnail far down a page, exactly wrong for this one.
+ */
+import { Picture } from "astro:assets";
+
+interface Props {
+  /** The brand original, imported (e.g. `import banner from "@brand/banner.png"`). */
+  image: ImageMetadata;
+  /** CSS height of the box the artwork covers; its width is always the viewport's. */
+  boxHeight: string;
+  /** `object-position` — which part of the artwork survives `cover`'s crop. */
+  objectPosition?: string;
+  /** How far the artwork is faded back behind the text laid over it. */
+  opacity: number;
+}
+
+const { image, boxHeight, objectPosition = "center", opacity } = Astro.props;
+
+/**
+ * Stops at the original's own width: past that there is no more detail to
+ * serve, only bytes. The ladder reaches well beyond today's artwork on purpose
+ * — re-export a brand original at 3840px and the larger rungs light up on
+ * their own, with nothing here to change.
+ */
+const WIDTH_LADDER = [640, 960, 1280, 1600, 1920, 2560, 3200, 3840];
+const widths = [...WIDTH_LADDER.filter((width) => width < image.width), image.width];
+
+const box = /^(\d+(?:\.\d+)?)(px|vh)$/.exec(boxHeight);
+if (box === null) throw new Error(`boxHeight must be a px or vh length, got ${boxHeight}`);
+const [, boxLength, unit] = box;
+
+/** The width `cover` paints the artwork at once it is scaled to fill the box's height. */
+const floor = (Number(boxLength) * image.width) / image.height;
+
+const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+
+/**
+ * "Is the viewport already at least as wide as `floor`?" — in px that is a
+ * plain `min-width`; in vh it is the viewport's own aspect ratio, since
+ * `100vw >= n vh` is exactly `vw/vh >= n/100`. Written as two integers because
+ * a `<ratio>` only had to accept those before Media Queries 4.
+ */
+const width = Math.round(Number(boxLength) * image.width);
+const height = 100 * image.height;
+const divisor = gcd(width, height);
+const alreadyWideEnough =
+  unit === "px" ? `(min-width: ${floor}px)` : `(min-aspect-ratio: ${width / divisor}/${height / divisor})`;
+
+const sizes = `${alreadyWideEnough} 100vw, ${Number(floor.toFixed(2))}${unit}`;
+---
+
+<Picture
+  src={image}
+  widths={widths}
+  sizes={sizes}
+  formats={["avif", "webp"]}
+  fallbackFormat="jpeg"
+  alt=""
+  loading="eager"
+  fetchpriority="high"
+  pictureAttributes={{ class: "hero-bg" }}
+  style={`object-position: ${objectPosition}; opacity: ${opacity};`}
+/>

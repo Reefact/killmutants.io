@@ -23,6 +23,24 @@ a:hover {
   text-shadow: 0 0 10px rgba(197, 82, 255, 0.55);
 }
 
+/* The full-bleed artwork behind a hero or a page banner (HeroBackground.astro).
+ * What is taken out of flow is the <picture>, not the <img> inside it: left in
+ * flow, the <picture> is still a flex item of the home hero's column — an empty
+ * one, since the <img> it wraps is what fills the box — and the column's `gap`
+ * would space it away from the content, pushing the whole hero down. */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-bg img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .noise {
   position: absolute;
   inset: 0;

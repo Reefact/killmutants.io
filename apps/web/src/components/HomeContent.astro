@@ -1,5 +1,7 @@
 ---
 import Header from "./Header.astro";
+import HeroBackground from "./HeroBackground.astro";
+import banner from "@brand/banner.png";
 import { localeFromPath } from "../i18n/routing";
 import { useTranslations } from "../i18n/ui";
 import { site } from "../site";
@@ -15,11 +17,18 @@ const t = useTranslations(localeFromPath(Astro.url.pathname));
     class="hero"
     style="position: relative; flex: 1; padding: 40px 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 18px; overflow: hidden;"
   >
-    <img
-      src="/images/banner-hero.jpg"
-      alt=""
-      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 0; opacity: 0.61;"
-    />
+    {/* A bound, not a measurement. The hero is `flex: 1` in a `min-height:
+        100vh` column, so it absorbs whatever the PITCH section below leaves —
+        which on a short window is ~50% of the viewport but on a tall one keeps
+        growing with it (measured 1985px at 1200x2400). Any fixed px figure is
+        therefore a figure the hero outgrows, and `sizes` would then name a
+        width smaller than what is painted and take back a rung of the ladder:
+        at 500x2000 the artwork is painted 2847px wide, and a 640px box height
+        claimed 1493 and settled for the 1600px variant. 100vh is the bound
+        that holds. Above ~1100px wide it stops mattering anyway — the box is
+        proportionally wider than the artwork there, so `cover` scales it by
+        width and 100vw takes over. See HeroBackground.astro. */}
+    <HeroBackground image={banner} boxHeight="100vh" opacity={0.61} />
     <div
       style="position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, #0d0c0a 0%, rgba(13,12,10,0) 15%, rgba(13,12,10,0) 87.5%, #0d0c0a 100%), linear-gradient(0deg, #0d0c0a 0%, rgba(13,12,10,0) 30%, rgba(13,12,10,0) 75%, rgba(13,12,10,0.6) 100%);"
     >
