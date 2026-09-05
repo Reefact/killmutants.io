@@ -16,5 +16,13 @@
 # bytes — so there is no such thing as a stale copy to guard against. These are
 # also the site's heaviest downloads (the hero artwork, in several sizes and
 # formats), which is exactly what a year-long immutable cache is for.
+#
+# `immutable` is a promise to hold these bytes for a year without ever asking
+# again, so it is only as good as that hash. Astro's own hash does NOT cover
+# `image.service.config`, where the encoder settings live, which made this
+# header a lie: changing avif.quality rebuilt the same filename with a
+# different image, and anyone holding the URL would have kept the old one all
+# year. apps/web/image-service/sharp.mjs closes that hole — read it before
+# touching either this rule or those settings.
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable

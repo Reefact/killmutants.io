@@ -54,7 +54,10 @@ export default defineConfig({
     // 259 kB) — twelve times the build for nothing. WebP's effort is cheap
     // enough (under a second) to just max out.
     service: {
-      entrypoint: 'astro/assets/services/sharp',
+      // Not Astro's sharp service directly: the wrapper folds the settings
+      // below into each asset's hash, which Astro does not do and `_headers`
+      // relies on. See the file for the bug that is, in bytes.
+      entrypoint: './image-service/sharp.mjs',
       config: {
         avif: { quality: 62, effort: 3 },
         webp: { quality: 80, effort: 6, smartSubsample: true },
