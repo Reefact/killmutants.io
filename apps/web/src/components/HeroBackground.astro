@@ -10,19 +10,26 @@
  *
  * Both call sites paint the artwork with `object-fit: cover` across a box as
  * wide as the viewport — so the obvious `sizes="100vw"` looks right and is
- * wrong. `cover` scales until *both* axes are filled, i.e. by whichever one
- * runs out first, so the width the artwork is actually painted at is
+ * only half right. `cover` scales until *both* axes are filled, i.e. by
+ * whichever one runs out first, so the width the artwork is actually painted
+ * at is
  *
  *     max(100vw, boxHeight × the artwork's own aspect ratio)
  *
- * and on any screen proportionally taller than the artwork the second term
- * wins, by a lot: a 2560×1440 screen paints this 1916×821 banner 3361px wide,
- * not 2560. `sizes="100vw"` would under-ask by a third there and hand a big
- * screen a variant it then has to enlarge — the very thing this component
- * exists to stop. Hence the caller states the box's height and the `sizes`
- * below states the real arithmetic. (A browser too old to parse `max()` in
- * `sizes` drops it and falls back to `100vw`, which is exactly the old
- * behaviour: worse, never broken.)
+ * Whenever the box is proportionally *wider* than the artwork the first term
+ * wins and `100vw` is exact — which on a wide desktop is the usual case. It is
+ * the narrow window that breaks it: the /version banner is 300px tall against
+ * a 1774x887 original, so a 375px-wide phone paints it 600px wide, not 375,
+ * and `sizes="100vw"` would under-ask by 60% and hand it a variant it then has
+ * to enlarge. Hence the caller states the box's height and the `sizes` below
+ * states the real arithmetic.
+ *
+ * `boxHeight` is the height the box *actually* has, which is not always a
+ * number CSS states outright — the home hero's is content-driven (see its call
+ * site). Over-stating it is safe but wasteful: it only ever makes a browser
+ * ask for a larger variant than it can use. (A browser too old to parse
+ * `max()` in `sizes` drops it and falls back to `100vw`, which is exactly the
+ * old behaviour: worse, never broken.)
  *
  * `loading="eager"` and `fetchpriority="high"` because this artwork is the
  * largest thing above the fold on both pages — the LCP element itself.
