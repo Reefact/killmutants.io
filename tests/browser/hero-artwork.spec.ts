@@ -60,17 +60,23 @@ for (const { page: label, path } of ARTWORK) {
   });
 }
 
-test("the home hero is sized for what `cover` paints, not for the viewport's width", async ({ page }) => {
-  // The hero's box is as wide as the viewport but a whole viewport tall, and the
-  // artwork is far wider than it is tall — so `cover` fills the box by height and
-  // spills well past both edges. A plain `sizes="100vw"` would ask for 2560 here
-  // and hand back a variant the browser then has to enlarge; the point is that it
-  // asks for the ~3361 it genuinely paints.
-  await page.setViewportSize({ width: 2560, height: 1440 });
-  await page.goto("/");
+test("a narrow window is sized for what `cover` paints, not for its own width", async ({ page }) => {
+  // `cover` fills the box by whichever axis runs out first. A phone-width window
+  // is far narrower than the artwork is wide, so the artwork is scaled to the
+  // box's *height* and spills past both edges — the /version banner is 300px tall
+  // against a 1774x887 original, so it is painted 600px wide on a 375px screen.
+  // A plain `sizes="100vw"` would ask for 375 and hand back a variant the browser
+  // then has to enlarge; the point is that it asks for the 600 it truly paints.
+  //
+  // (The same arithmetic on a wide desktop resolves the other way — there the box
+  // is proportionally wider than the artwork, `cover` scales it by width, and
+  // 100vw *is* the answer. Which is why this asserts on the narrow case: it is
+  // the one where the two readings differ.)
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto("/version/");
 
   const { askedFor } = await resolved(page);
-  expect(askedFor).toBeGreaterThan(2560);
+  expect(askedFor).toBeGreaterThan(375);
 });
 
 test("a modest window is not force-fed the largest variant", async ({ page }) => {

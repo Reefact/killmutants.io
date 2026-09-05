@@ -17,11 +17,16 @@ const t = useTranslations(localeFromPath(Astro.url.pathname));
     class="hero"
     style="position: relative; flex: 1; padding: 40px 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 18px; overflow: hidden;"
   >
-    {/* `100vh`: the hero is `flex: 1` in a `min-height: 100vh` column, so a
-        viewport's worth of height is the tallest it is ever asked to cover —
-        see HeroBackground.astro on why its height, not the viewport's width,
-        is what decides how wide the artwork gets painted. */}
-    <HeroBackground image={banner} boxHeight="100vh" opacity={0.61} />
+    {/* The hero is `flex: 1` in a `min-height: 100vh` column, so `100vh` reads
+        like its height and is not: the PITCH section below takes its share
+        first, leaving the hero 40-80% of the viewport (measured 449-668px
+        across 320-1024px wide, both locales — it is content-driven, so this is
+        a measurement and not a rule). 640px is that content height with room
+        to spare. Stating 100vh here instead cost every laptop a variant it had
+        no use for. Above ~1100px wide the box is proportionally wider than the
+        artwork anyway, so `cover` scales it by width and 100vw takes over —
+        see HeroBackground.astro. */}
+    <HeroBackground image={banner} boxHeight="640px" opacity={0.61} />
     <div
       style="position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, #0d0c0a 0%, rgba(13,12,10,0) 15%, rgba(13,12,10,0) 87.5%, #0d0c0a 100%), linear-gradient(0deg, #0d0c0a 0%, rgba(13,12,10,0) 30%, rgba(13,12,10,0) 75%, rgba(13,12,10,0.6) 100%);"
     >
