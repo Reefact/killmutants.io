@@ -24,12 +24,29 @@
  * to enlarge. Hence the caller states the box's height and the `sizes` below
  * states the real arithmetic.
  *
- * `boxHeight` is the height the box *actually* has, which is not always a
- * number CSS states outright — the home hero's is content-driven (see its call
- * site). Over-stating it is safe but wasteful: it only ever makes a browser
- * ask for a larger variant than it can use. (A browser too old to parse
- * `max()` in `sizes` drops it and falls back to `100vw`, which is exactly the
- * old behaviour: worse, never broken.)
+ * `boxHeight` is the height the box can actually reach, which is not always a
+ * number CSS states outright — the home hero's grows with the window (see its
+ * call site). Over-stating it only costs bytes; under-stating it hands back a
+ * variant too small, which is the whole bug this component exists to prevent,
+ * so it is stated as a bound and never as a measurement.
+ *
+ * ## Why the `sizes` below looks the way it does
+ *
+ * `max(100vw, …)` says all of this in one expression, and WebKit did not
+ * accept `min()`/`max()`/`clamp()` in `sizes` until Safari 26.4 — where it is
+ * dropped, `sizes` silently falls back to `100vw`, losing exactly the cover
+ * width this is here to state. So the same arithmetic is spelled out as a
+ * media condition and a plain length instead, which every browser in range has
+ * parsed for a decade: ask whether the viewport is already wider than the
+ * artwork gets painted, and answer `100vw` if it is and that painted width if
+ * it is not.
+ *
+ * One residue is left on purpose: a box stated in `vh` is bounded by the
+ * viewport, so on a screen small enough that the box's own content overflows
+ * it — 320x568, where the home hero runs 596px tall — the answer is ~5% under
+ * the truth. Raising the bound to cover that would over-state it on every
+ * other screen, and 5% is a fraction of the gap between two rungs of the
+ * ladder, so it selects the same variant either way.
  *
  * `loading="eager"` and `fetchpriority="high"` because this artwork is the
  * largest thing above the fold on both pages — the LCP element itself.
@@ -60,7 +77,28 @@ const { image, boxHeight, objectPosition = "center", opacity } = Astro.props;
 const WIDTH_LADDER = [640, 960, 1280, 1600, 1920, 2560, 3200, 3840];
 const widths = [...WIDTH_LADDER.filter((width) => width < image.width), image.width];
 
-const sizes = `max(100vw, calc(${boxHeight} * ${image.width} / ${image.height}))`;
+const box = /^(\d+(?:\.\d+)?)(px|vh)$/.exec(boxHeight);
+if (box === null) throw new Error(`boxHeight must be a px or vh length, got ${boxHeight}`);
+const [, boxLength, unit] = box;
+
+/** The width `cover` paints the artwork at once it is scaled to fill the box's height. */
+const floor = (Number(boxLength) * image.width) / image.height;
+
+const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+
+/**
+ * "Is the viewport already at least as wide as `floor`?" — in px that is a
+ * plain `min-width`; in vh it is the viewport's own aspect ratio, since
+ * `100vw >= n vh` is exactly `vw/vh >= n/100`. Written as two integers because
+ * a `<ratio>` only had to accept those before Media Queries 4.
+ */
+const width = Math.round(Number(boxLength) * image.width);
+const height = 100 * image.height;
+const divisor = gcd(width, height);
+const alreadyWideEnough =
+  unit === "px" ? `(min-width: ${floor}px)` : `(min-aspect-ratio: ${width / divisor}/${height / divisor})`;
+
+const sizes = `${alreadyWideEnough} 100vw, ${Number(floor.toFixed(2))}${unit}`;
 ---
 
 <Picture
