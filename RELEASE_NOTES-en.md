@@ -8,6 +8,13 @@ repository's own history.
 
 ## Unreleased
 
+## release/2026-09-06T06-55-03Z — September 6, 2026
+
+### 🙌 Improvements
+
+- The banner artwork is now served at a size and in a format matched to the screen showing it — AVIF or WebP where the browser supports them — so it stays sharp on large and high-resolution displays instead of being enlarged from a single fixed-size JPEG.
+- Coming back to the site no longer re-downloads that artwork: it is cached for a year, and a new address is issued whenever the image itself changes.
+
 ## release/2026-09-03T15-59-11Z — September 3, 2026
 
 The site now asks search engines not to index it while it's still in "Coming Soon" mode.
