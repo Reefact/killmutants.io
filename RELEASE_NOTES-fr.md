@@ -8,6 +8,13 @@ technique, c'est celui du dépôt lui-même.
 
 ## Unreleased
 
+## release/2026-09-06T06-55-03Z — 6 septembre 2026
+
+### 🙌 Améliorations
+
+- L'illustration de bannière est désormais servie dans une taille et un format adaptés à l'écran qui l'affiche — AVIF ou WebP quand le navigateur les gère — et reste donc nette sur les grands écrans et les écrans haute résolution, au lieu d'être agrandie à partir d'un unique JPEG de taille fixe.
+- Revenir sur le site ne retélécharge plus cette illustration : elle est mise en cache pour un an, et une nouvelle adresse est émise dès que l'image change réellement.
+
 ## release/2026-09-03T15-59-11Z — 3 septembre 2026
 
 Le site demande désormais aux moteurs de recherche de ne pas l'indexer tant qu'il est en
