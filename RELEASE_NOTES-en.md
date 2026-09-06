@@ -13,7 +13,7 @@ repository's own history.
 ### 🙌 Improvements
 
 - The banner artwork is now served at a size and in a format matched to the screen showing it — AVIF or WebP where the browser supports them — so it stays sharp on large and high-resolution displays instead of being enlarged from a single fixed-size JPEG.
-- Coming back to the site no longer re-downloads that artwork: it is cached for a year, and a new address is issued whenever the image itself changes.
+- On a repeat visit the artwork is no longer downloaded: the browser keeps it cached for a year, and if the image changes its URL changes with it, which is what forces the new version to be fetched.
 
 ## release/2026-09-03T15-59-11Z — September 3, 2026
 
