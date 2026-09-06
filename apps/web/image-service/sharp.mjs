@@ -77,4 +77,14 @@ export default {
     // transform, so setting this once here carries it across the whole ladder.
     return { ...validated, [ENCODER_PROPERTY]: encoderRevision(imageConfig) };
   },
+
+  // That same spreading is why this exists: `getHTMLAttributes` drops the
+  // transform properties Astro knows and passes everything else through as an
+  // attribute of the `<img>`, so the fingerprint was being published as
+  // `encoder="…"` in the markup. It is an input to the hash and to nothing
+  // else, so it is taken back out here — after `validateOptions` has put it on
+  // the transforms that are hashed, and before any of it reaches a reader.
+  getHTMLAttributes({ [ENCODER_PROPERTY]: _encoder, ...options }, imageConfig) {
+    return sharpService.getHTMLAttributes(options, imageConfig);
+  },
 };
