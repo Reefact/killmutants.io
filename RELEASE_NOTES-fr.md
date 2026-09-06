@@ -12,8 +12,8 @@ technique, c'est celui du dépôt lui-même.
 
 ### 🙌 Améliorations
 
-- L'illustration de bannière est désormais servie dans une taille et un format adaptés à l'écran qui l'affiche — AVIF ou WebP quand le navigateur les gère — et reste donc nette sur les grands écrans et les écrans haute résolution, au lieu d'être agrandie à partir d'un unique JPEG de taille fixe.
-- Revenir sur le site ne retélécharge plus cette illustration : elle est mise en cache pour un an, et une nouvelle adresse est émise dès que l'image change réellement.
+- L'illustration de fond est désormais servie à la taille et dans le format qui conviennent à l'écran qui l'affiche — AVIF ou WebP quand le navigateur les prend en charge — et reste donc nette sur les grands écrans comme sur les écrans haute résolution, au lieu d'être agrandie à partir d'un unique JPEG de taille fixe.
+- En revenant sur le site, on ne retélécharge plus cette illustration : elle est mise en cache pendant un an, et son adresse ne change que lorsque l'image change vraiment.
 
 ## release/2026-09-03T15-59-11Z — 3 septembre 2026
 
