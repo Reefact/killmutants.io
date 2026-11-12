@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- Same skull as the header brand mark (Header.astro), on the site's
+       background so it stays readable on light browser tabs too. -->
+  <rect width="24" height="24" rx="5" fill="#0d0c0a"/>
+  <g fill="none" stroke="#b026ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" transform="translate(12 11.6) scale(0.86) translate(-12 -11.25)">
+    <path d="M12 2.5c-4.1 0-7.2 3-7.2 7v4.2c0 1.1.6 2.1 1.6 2.6L5 20h3.2l.9-1.8h5.8l.9 1.8H19l-1.4-3.7c1-.5 1.6-1.5 1.6-2.6V9.5c0-4-3.1-7-7.2-7Z"/>
+    <path d="M8.7 9.8 10.3 11.4M10.3 9.8 8.7 11.4"/>
+    <path d="M15.3 9.8 13.7 11.4M13.7 9.8 15.3 11.4"/>
+  </g>
+</svg>
