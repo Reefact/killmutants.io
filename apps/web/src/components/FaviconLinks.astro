@@ -1,0 +1,10 @@
+---
+/** The browser-tab / home-screen icon: the header's skull brand mark (see
+ * Header.astro), served from public/. Shared so no page ships without one.
+ * favicon.ico is the fallback for browsers without SVG favicon support (and
+ * for the implicit /favicon.ico request); apple-touch-icon.png is iOS's. */
+---
+
+<link rel="icon" href="/favicon.ico" sizes="48x48" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />

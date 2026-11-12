@@ -1,5 +1,6 @@
 ---
 import "../styles/base.css";
+import FaviconLinks from "../components/FaviconLinks.astro";
 import FontLinks from "../components/FontLinks.astro";
 import HomeContent from "../components/HomeContent.astro";
 import { useTranslations } from "../i18n/ui";
@@ -16,6 +17,7 @@ const t = useTranslations("en");
     <meta name="description" content={t("home.meta.description")} />
     {/* Désindexation temporaire pendant le "Coming Soon" — voir robots.txt. */}
     <meta name="robots" content="noindex, nofollow" />
+    <FaviconLinks />
     <FontLinks />
   </head>
   <body>
